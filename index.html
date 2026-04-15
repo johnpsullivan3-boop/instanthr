@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InstantHR — Employee Handbooks, Instantly</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  // Hide all screens on load, then show landing
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.screen').forEach(function(s) {
+      s.style.display = 'none';
+    });
+    var landing = document.getElementById('screen-landing');
+    if (landing) {
+      landing.style.display = 'flex';
+      landing.style.flexDirection = 'column';
+    }
+  });
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#2563eb;--brand-dark:#1d4ed8;--brand-light:#eff6ff;--brand-mid:#3b82f6;
+  --purple:#7c3aed;--purple-light:#f5f3ff;
+  --green:#059669;--green-light:#ecfdf5;
+  --amber:#d97706;--amber-light:#fffbeb;
+  --red:#dc2626;--red-light:#fef2f2;
+  --gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+  --gray-400:#94a3b8;--gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--gray-900:#0f172a;
+  --radius:10px;--radius-lg:14px;--shadow:0 2px 16px rgba(0,0,0,0.07)
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--gray-50);color:var(--gray-800);min-height:100vh}
+.screen{display:none;min-height:100vh;flex-direction:column}
+
+/* NAV */
+nav{background:white;border-bottom:1px solid var(--gray-200);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:200}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.1rem;color:var(--gray-900);cursor:pointer;text-decoration:none}
+.logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--brand),var(--purple));border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo span{color:var(--brand)}
+.nav-r{display:flex;align-items:center;gap:10px}
+.nav-user{font-size:0.82rem;color:var(--gray-600);padding:0 8px}
+.btn{padding:9px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:7px}
+.btn-sm{padding:6px 14px;font-size:0.8rem}
+.btn-primary{background:var(--brand);color:white}.btn-primary:hover{background:var(--brand-dark);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--gray-600);border:1.5px solid var(--gray-200)}.btn-ghost:hover{background:var(--gray-100)}
+.btn-purple{background:var(--purple);color:white}.btn-purple:hover{opacity:.9}
+.btn-green{background:var(--green);color:white}.btn-green:hover{opacity:.9}
+.btn-outline-red{background:var(--red-light);color:var(--red);border:1.5px solid #fecaca}.btn-outline-red:hover{background:#fee2e2}
+.btn-outline-blue{background:var(--brand-light);color:var(--brand);border:1.5px solid #bfdbfe}.btn-outline-blue:hover{background:#dbeafe}
+.btn-outline-green{background:var(--green-light);color:var(--green);border:1.5px solid #a7f3d0}.btn-outline-green:hover{background:#d1fae5}
+
+/* ══ LANDING ══ */
+#screen-landing{background:white;display:flex !important;flex-direction:column}
+.hero{padding:80px 40px 60px;text-align:center;background:linear-gradient(160deg,#f0f7ff 0%,#f5f0ff 100%);border-bottom:1px solid var(--gray-200)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--brand-light);color:var(--brand);font-size:0.78rem;font-weight:700;padding:5px 14px;border-radius:99px;margin-bottom:20px;border:1px solid #bfdbfe}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:var(--gray-900);line-height:1.15;margin-bottom:18px;max-width:700px;margin-left:auto;margin-right:auto}
+.hero h1 span{background:linear-gradient(135deg,var(--brand),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.1rem;color:var(--gray-600);max-width:560px;margin:0 auto 32px;line-height:1.7}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-hero{padding:14px 32px;font-size:1rem;border-radius:10px}
+.hero-social{margin-top:28px;font-size:0.82rem;color:var(--gray-400)}
+.hero-social strong{color:var(--gray-600)}
+
+.features{padding:70px 40px;max-width:1100px;margin:0 auto}
+.section-label{font-size:0.78rem;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+.section-title{font-size:1.9rem;font-weight:800;color:var(--gray-900);margin-bottom:14px}
+.section-sub{font-size:1rem;color:var(--gray-600);max-width:500px;line-height:1.6;margin-bottom:48px}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.feat-card{background:white;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:26px;transition:box-shadow .2s}
+.feat-card:hover{box-shadow:var(--shadow)}
+.feat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:14px}
+.feat-card h3{font-size:1rem;font-weight:700;margin-bottom:7px;color:var(--gray-900)}
+.feat-card p{font-size:0.85rem;color:var(--gray-600);line-height:1.6}
+.fi-blue{background:var(--brand-light)}.fi-purple{background:var(--purple-light)}.fi-green{background:var(--green-light)}.fi-amber{background:var(--amber-light)}
+
+.pricing-section{background:var(--gray-50);padding:70px 40px;border-top:1px solid var(--gray-200)}
+.pricing-wrap{max-width:900px;margin:0 auto;text-align:center}
+.pricing-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px;text-align:left}
+.price-card{background:white;border:1.5px solid var(--gray-200);border-radius:var(--radius-lg);padding:30px;position:relative}
+.price-card.featured{border-color:var(--brand);box-shadow:0 0 0 3px #dbeafe}
+.price-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--brand);color:white;font-size:0.72rem;font-weight:700;padding:3px 14px;border-radius:99px;white-space:nowrap}
+.price-name{font-size:0.85rem;font-weight:700;color:var(--gray-600);margin-bottom:8px}
+.price-amount{font-size:2.2rem;font-weight:900;color:var(--gray-900)}.price-amount sup{font-size:1rem;vertical-align:super}
+.price-period{font-size:0.82rem;color:var(--gray-400);margin-bottom:18px}
+.price-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+.price-features li{font-size:0.85rem;color:var(--gray-700);display:flex;align-items:flex-start;gap:8px}
+.price-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+
+.testimonials{padding:70px 40px;max-width:1000px;margin:0 auto}
+.test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:36px}
+.test-card{background:white;border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:22px}
+.test-stars{color:#f59e0b;font-size:0.9rem;margin-bottom:10px}
+.test-text{font-size:0.875rem;color:var(--gray-700);line-height:1.65;font-style:italic;margin-bottom:14px}
+.test-author{font-size:0.8rem;font-weight:700;color:var(--gray-900)}
+.test-role{font-size:0.78rem;color:var(--gray-400)}
+
+.landing-footer{background:var(--gray-900);color:var(--gray-400);text-align:center;padding:28px;font-size:0.82rem}
+.landing-footer strong{color:white}
+
+/* ══ AUTH ══ */
+#screen-auth{background:linear-gradient(135deg,#f0f7ff,#f5f0ff);align-items:center;justify-content:center}
+.auth-card{background:white;border-radius:var(--radius-lg);padding:40px;width:100%;max-width:420px;box-shadow:var(--shadow);margin:40px 20px}
+.auth-logo{text-align:center;margin-bottom:28px}
+.auth-logo .logo{justify-content:center}
+.auth-title{font-size:1.35rem;font-weight:800;color:var(--gray-900);margin-bottom:6px;text-align:center}
+.auth-sub{font-size:0.87rem;color:var(--gray-600);text-align:center;margin-bottom:28px}
+.auth-tabs{display:flex;background:var(--gray-100);border-radius:8px;padding:3px;margin-bottom:24px}
+.auth-tab{flex:1;padding:8px;border-radius:6px;border:none;background:transparent;font-size:0.85rem;font-weight:600;cursor:pointer;color:var(--gray-600);transition:all .2s}
+.auth-tab.active{background:white;color:var(--gray-900);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:0.82rem;font-weight:600;color:var(--gray-700);margin-bottom:6px}
+.form-group input{width:100%;padding:10px 13px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:0.9rem;color:var(--gray-900);background:var(--gray-50);transition:border .2s}
+.form-group input:focus{outline:none;border-color:var(--brand);background:white}
+.auth-btn{width:100%;padding:12px;border-radius:8px;border:none;background:var(--brand);color:white;font-size:0.95rem;font-weight:700;cursor:pointer;margin-top:6px;transition:all .2s}
+.auth-btn:hover{background:var(--brand-dark)}
+.auth-divider{text-align:center;font-size:0.78rem;color:var(--gray-400);margin:18px 0;position:relative}
+.auth-divider::before,.auth-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--gray-200)}
+.auth-divider::before{left:0}.auth-divider::after{right:0}
+.auth-notice{background:var(--amber-light);border:1px solid #fde68a;border-radius:8px;padding:11px 14px;font-size:0.8rem;color:#92400e;margin-top:16px;line-height:1.5}
+
+/* ══ DASHBOARD ══ */
+#screen-dashboard .main{flex:1;padding:32px;max-width:1100px;margin:0 auto;width:100%}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:14px}
+.dash-title{font-size:1.5rem;font-weight:800;color:var(--gray-900)}
+.dash-sub{font-size:0.87rem;color:var(--gray-600);margin-top:3px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px}
+.stat-label{font-size:0.78rem;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.stat-val{font-size:1.7rem;font-weight:800;color:var(--gray-900)}
+.stat-sub{font-size:0.78rem;color:var(--gray-400);margin-top:3px}
+.handbooks-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.hb-card{background:white;border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;transition:box-shadow .2s;cursor:pointer}
+.hb-card:hover{box-shadow:var(--shadow)}
+.hb-card-top{height:7px}
+.hb-card-body{padding:20px}
+.hb-card-name{font-size:1rem;font-weight:700;color:var(--gray-900);margin-bottom:4px}
+.hb-card-meta{font-size:0.78rem;color:var(--gray-400);margin-bottom:14px}
+.hb-badges{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:0.72rem;font-weight:600}
+.badge-blue{background:var(--brand-light);color:var(--brand)}
+.badge-green{background:var(--green-light);color:var(--green)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+.badge-gray{background:var(--gray-100);color:var(--gray-600)}
+.hb-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.new-hb-card{background:white;border:2px dashed var(--gray-200);border-radius:var(--radius-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;cursor:pointer;transition:all .2s;min-height:200px}
+.new-hb-card:hover{border-color:var(--brand);background:var(--brand-light)}
+.new-hb-icon{width:48px;height:48px;background:var(--gray-100);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:12px}
+.new-hb-card:hover .new-hb-icon{background:var(--brand-light)}
+.new-hb-card h3{font-size:0.95rem;font-weight:700;color:var(--gray-700);margin-bottom:4px}
+.new-hb-card p{font-size:0.8rem;color:var(--gray-400);text-align:center}
+.empty-state{text-align:center;padding:60px 20px}
+.empty-state h3{font-size:1.1rem;font-weight:700;color:var(--gray-700);margin-bottom:8px}
+.empty-state p{font-size:0.87rem;color:var(--gray-400);margin-bottom:20px}
+
+/* ══ HANDBOOK DETAIL ══ */
+#screen-detail .main{flex:1;padding:28px;max-width:1000px;margin:0 auto;width:100%}
+.detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap}
+.detail-back{font-size:0.85rem;color:var(--brand);cursor:pointer;margin-bottom:8px;display:inline-flex;align-items:center;gap:5px}
+.detail-back:hover{text-decoration:underline}
+.detail-title{font-size:1.4rem;font-weight:800;color:var(--gray-900)}
+.detail-meta{font-size:0.82rem;color:var(--gray-400);margin-top:4px}
+.detail-actions{display:flex;gap:9px;flex-wrap:wrap}
+.tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:24px;gap:2px}
+.tab{padding:10px 18px;font-size:0.87rem;font-weight:600;color:var(--gray-400);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tab.active{color:var(--brand);border-bottom-color:var(--brand)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+/* Compliance score */
+.compliance-bar-wrap{background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.compliance-bar-wrap h3{font-size:0.95rem;font-weight:700;margin-bottom:14px;color:var(--gray-900)}
+.score-row{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+.score-label{font-size:0.82rem;color:var(--gray-600);width:160px;flex-shrink:0}
+.score-bar{flex:1;height:8px;background:var(--gray-100);border-radius:99px;overflow:hidden}
+.score-fill{height:100%;border-radius:99px;transition:width .6s}
+.score-pct{font-size:0.8rem;font-weight:700;width:36px;text-align:right}
+.flags-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.flag-item{display:flex;align-items:flex-start;gap:10px;background:var(--amber-light);border:1px solid #fde68a;border-radius:8px;padding:12px 14px;font-size:0.83rem;color:#92400e;line-height:1.5}
+
+/* Version history */
+.version-list{display:flex;flex-direction:column;gap:12px}
+.version-item{background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.version-info h4{font-size:0.9rem;font-weight:700;color:var(--gray-900)}
+.version-info p{font-size:0.78rem;color:var(--gray-400);margin-top:3px}
+.version-changes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.version-actions{display:flex;gap:8px}
+
+/* E-signature */
+.esig-wrap{background:white;border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden}
+.esig-header{padding:16px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;justify-content:space-between}
+.esig-header h3{font-size:0.95rem;font-weight:700;color:var(--gray-900)}
+.esig-table{width:100%;border-collapse:collapse}
+.esig-table th{background:var(--gray-50);padding:10px 16px;text-align:left;font-size:0.78rem;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--gray-200)}
+.esig-table td{padding:12px 16px;font-size:0.85rem;color:var(--gray-700);border-bottom:1px solid var(--gray-100)}
+.esig-table tr:last-child td{border-bottom:none}
+.esig-table tr:hover td{background:var(--gray-50)}
+.sig-status{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:99px;font-size:0.75rem;font-weight:600}
+.sig-signed{background:var(--green-light);color:var(--green)}
+.sig-pending{background:var(--amber-light);color:var(--amber)}
+.sig-sent{background:var(--brand-light);color:var(--brand)}
+.add-employee-row{padding:14px 16px;border-top:1px solid var(--gray-200);display:flex;gap:10px;flex-wrap:wrap}
+.add-employee-row input{flex:1;min-width:180px;padding:8px 12px;border:1.5px solid var(--gray-200);border-radius:7px;font-size:0.85rem}
+.add-employee-row input:focus{outline:none;border-color:var(--brand)}
+
+/* ══ PAYMENT ══ */
+#screen-payment{background:linear-gradient(135deg,#f0f7ff,#f5f0ff);align-items:center;justify-content:center}
+.payment-card{background:white;border-radius:var(--radius-lg);padding:36px;width:100%;max-width:480px;box-shadow:var(--shadow);margin:40px 20px}
+.payment-title{font-size:1.25rem;font-weight:800;color:var(--gray-900);margin-bottom:6px}
+.payment-sub{font-size:0.87rem;color:var(--gray-600);margin-bottom:24px}
+.order-summary{background:var(--gray-50);border-radius:var(--radius);padding:18px;margin-bottom:24px}
+.order-row{display:flex;justify-content:space-between;align-items:center;font-size:0.88rem;color:var(--gray-700);margin-bottom:8px}
+.order-row:last-child{margin-bottom:0;font-weight:700;color:var(--gray-900);font-size:0.95rem;padding-top:10px;border-top:1px solid var(--gray-200)}
+.order-row .tag{font-size:0.72rem;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:99px;font-weight:600}
+.card-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.card-fields .full{grid-column:1/-1}
+.stripe-notice{display:flex;align-items:center;gap:8px;font-size:0.78rem;color:var(--gray-400);margin-bottom:20px}
+.sub-notice{background:var(--brand-light);border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;font-size:0.8rem;color:var(--brand-dark);margin-bottom:18px;line-height:1.55}
+.pay-btn{width:100%;padding:13px;border-radius:9px;border:none;background:linear-gradient(135deg,var(--brand),var(--purple));color:white;font-size:1rem;font-weight:700;cursor:pointer;transition:opacity .2s}
+.pay-btn:hover{opacity:.9}
+
+/* ══ WIZARD ══ */
+#screen-wizard .main{flex:1;padding:28px;max-width:860px;margin:0 auto;width:100%}
+.wiz-progress{margin-bottom:24px}
+.wiz-step-label{font-size:0.82rem;font-weight:600;color:var(--brand);margin-bottom:6px}
+.wiz-bar{height:5px;background:var(--gray-200);border-radius:99px;overflow:hidden}
+.wiz-fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--purple));border-radius:99px;transition:width .4s}
+.wiz-labels{display:flex;justify-content:space-between;margin-top:6px;font-size:0.68rem;color:var(--gray-400);flex-wrap:wrap;gap:2px}
+.wiz-card{background:white;border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow)}
+.wiz-card h2{font-size:1.2rem;font-weight:800;margin-bottom:5px;color:var(--gray-900)}
+.wiz-card .sub{font-size:0.87rem;color:var(--gray-600);margin-bottom:24px}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:0.82rem;font-weight:600;color:var(--gray-700);margin-bottom:6px}
+.field .hint{font-size:0.76rem;color:var(--gray-400);margin-top:5px;line-height:1.5}
+input[type=text],input[type=email],select,textarea{width:100%;padding:9px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:0.9rem;color:var(--gray-900);background:var(--gray-50);transition:border .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:white}
+textarea{resize:vertical;min-height:76px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.toggle-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:5px}
+.tog{padding:7px 13px;border:1.5px solid var(--gray-200);border-radius:7px;font-size:0.81rem;cursor:pointer;background:var(--gray-50);color:var(--gray-700);transition:all .14s;user-select:none}
+.tog.active{background:var(--brand-light);border-color:var(--brand);color:var(--brand);font-weight:600}
+.cb-group{display:flex;flex-direction:column;gap:8px;margin-top:5px}
+.cb-item{display:flex;align-items:flex-start;gap:9px;font-size:0.84rem;cursor:pointer;line-height:1.4}
+.cb-item input{width:15px;height:15px;margin-top:2px;accent-color:var(--brand);flex-shrink:0}
+.sub-opts{background:#f0f7ff;border:1.5px solid #bfdbfe;border-radius:9px;padding:14px;margin-top:10px}
+.sub-opts h4{font-size:0.8rem;font-weight:700;color:var(--brand-dark);margin-bottom:10px}
+.states-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:190px;overflow-y:auto;padding:10px;background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:9px;margin-top:6px}
+.state-chip{padding:5px 6px;border:1.5px solid var(--gray-200);border-radius:5px;font-size:0.73rem;cursor:pointer;background:white;text-align:center;transition:all .13s;user-select:none}
+.state-chip.on{background:var(--brand-light);border-color:var(--brand);color:var(--brand);font-weight:600}
+.tags-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:24px}
+.s-tag{background:#dbeafe;color:#1d4ed8;padding:3px 9px;border-radius:99px;font-size:0.75rem;font-weight:600;display:flex;align-items:center;gap:4px}
+.s-tag button{background:none;border:none;color:#1d4ed8;cursor:pointer;font-size:.85rem;padding:0}
+.sec-divider{border:none;border-top:2px solid var(--gray-100);margin:20px 0}
+/* Mission AI panel */
+.ai-panel{background:linear-gradient(135deg,#f5f3ff,#eff6ff);border:1.5px solid #c4b5fd;border-radius:10px;padding:18px;margin-top:8px}
+.ai-panel h4{font-size:0.88rem;font-weight:700;color:var(--purple);margin-bottom:3px;display:flex;align-items:center;gap:7px}
+.ai-panel p{font-size:0.79rem;color:#6d28d9;margin-bottom:14px}
+.ai-result{background:white;border:1.5px solid #c4b5fd;border-radius:8px;padding:14px;margin-top:12px}
+.ai-result-label{font-size:0.72rem;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px}
+.ai-result-text{font-size:0.88rem;color:var(--gray-800);line-height:1.7;font-style:italic}
+.ai-result-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.mini-spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+.wiz-nav{display:flex;justify-content:space-between;margin-top:24px}
+.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--gray-200);border-radius:9px;overflow:hidden}
+.rv{display:contents}
+.rv>div{padding:8px 13px;font-size:0.81rem;border-bottom:1px solid var(--gray-100)}
+.rv>div:first-child{font-weight:600;color:var(--gray-700);background:var(--gray-50)}
+.rv>div:last-child{color:var(--brand)}
+
+/* ══ GENERATING ══ */
+#screen-generating{align-items:center;justify-content:center;background:linear-gradient(135deg,#f0f7ff,#f5f0ff)}
+.gen-card{background:white;border-radius:var(--radius-lg);padding:48px 40px;max-width:500px;width:100%;text-align:center;box-shadow:var(--shadow);margin:40px 20px}
+.gen-spinner{width:56px;height:56px;border:4px solid var(--gray-200);border-top-color:var(--brand);border-radius:50%;animation:spin .9s linear infinite;margin:0 auto 20px}
+.gen-title{font-size:1.2rem;font-weight:800;color:var(--gray-900);margin-bottom:8px}
+.gen-msg{font-size:0.9rem;color:var(--gray-600)}
+.gen-steps{margin-top:28px;display:flex;flex-direction:column;gap:10px;text-align:left}
+.gen-step{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:8px;font-size:0.84rem;color:var(--gray-600);background:var(--gray-50)}
+.gen-step.done{background:var(--green-light);color:var(--green)}
+.gen-step.active{background:var(--brand-light);color:var(--brand);font-weight:600}
+.gen-step-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;background:var(--gray-200);color:var(--gray-600)}
+.gen-step.done .gen-step-icon{background:var(--green);color:white}
+.gen-step.active .gen-step-icon{background:var(--brand);color:white}
+
+/* ══ OUTPUT ══ */
+#screen-output .main{flex:1;padding:28px;max-width:1000px;margin:0 auto;width:100%}
+.output-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:16px;flex-wrap:wrap}
+.output-meta{font-size:0.8rem;color:var(--gray-400);margin-top:4px}
+.compliance-banner{background:var(--amber-light);border:1px solid #fde68a;border-radius:9px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px}
+.compliance-banner h4{font-size:0.88rem;font-weight:700;color:#92400e;margin-bottom:4px}
+.compliance-banner p{font-size:0.8rem;color:#a16207;line-height:1.5}
+.hb-preview{font-size:0.87rem;line-height:1.85;color:var(--gray-700);white-space:pre-wrap;max-height:540px;overflow-y:auto;padding:22px;border:1px solid var(--gray-200);border-radius:10px;background:white}
+.hb-preview::-webkit-scrollbar{width:5px}
+.hb-preview::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:99px}
+.output-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.legal-disclaimer{margin-top:16px;font-size:0.76rem;color:#92400e;line-height:1.6;padding:12px 14px;background:var(--amber-light);border-radius:8px;border:1px solid #fde68a}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo-upload{border:2px dashed var(--gray-200);border-radius:9px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--gray-50);margin-top:5px}
+.logo-upload:hover{border-color:var(--brand);background:var(--brand-light)}
+.logo-upload.has{border-style:solid;border-color:var(--brand)}
+.logo-upload img{max-height:60px;max-width:180px;margin:0 auto 6px;display:block}
+#logo-file{display:none}
+@media(max-width:600px){.two-col,.three-col,.pricing-cards{grid-template-columns:1fr}.states-grid{grid-template-columns:repeat(3,1fr)}.wiz-card{padding:22px}.review-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LANDING ══════════════ -->
+<div id="screen-landing" class="screen active">
+  <nav>
+    <a class="logo" onclick="goTo('landing')">
+      <div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+      Instant<span>HR</span>
+    </a>
+    <div class="nav-r">
+      <button class="btn btn-ghost btn-sm" onclick="goTo('auth')">Log in</button>
+      <button class="btn btn-primary btn-sm" onclick="goTo('auth')">Get Started</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">✦ New — Multi-state compliance engine</div>
+    <h1>Employee Handbooks,<br><span>Built in Minutes</span></h1>
+    <p>Answer simple questions. Get a fully written, legally structured, HR-compliant employee handbook — customized for your company and every state you operate in.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary btn-hero" onclick="goTo('auth')">Create Your Handbook →</button>
+      <button class="btn btn-ghost btn-hero" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">See how it works</button>
+    </div>
+    <div class="hero-social">Trusted by <strong>2,400+</strong> companies across <strong>50 states</strong></div>
+  </div>
+
+  <div class="features">
+    <div class="section-label">Everything included</div>
+    <div class="section-title">Everything your HR team needs</div>
+    <div class="section-sub">From multi-state compliance to e-signatures — InstantHR handles the entire handbook lifecycle.</div>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon fi-blue">⚡</div><h3>9-Step Smart Wizard</h3><p>Answer plain-English questions. We handle the legal language, policy structure, and state-specific addenda automatically.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-purple">🗺️</div><h3>50-State Compliance</h3><p>Select every state you operate in. California CFRA, New York PFL, Washington PFML — all included automatically.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-green">📄</div><h3>Beautiful PDF Export</h3><p>Branded with your logo, colors, and layout. Choose from Modern, Classic, or Minimal styles — all print-ready.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-amber">✍️</div><h3>E-Signature Tracking</h3><p>Send to employees for digital acknowledgment. Track who's signed, who's pending, and keep records automatically.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-blue">🛡️</div><h3>Compliance Scoring</h3><p>Every handbook gets a section-by-section compliance review with flags for policies that need attorney sign-off.</p></div>
+      <div class="feat-card"><div class="feat-icon fi-purple">🔄</div><h3>Annual Updates</h3><p>Laws change every year. Your $99/year renewal keeps your handbook current — we alert you when state laws affect your policies.</p></div>
+    </div>
+  </div>
+
+  <div class="pricing-section">
+    <div class="pricing-wrap">
+      <div class="section-label">Simple pricing</div>
+      <div class="section-title">One handbook. One price.</div>
+      <p style="color:var(--gray-600);font-size:.95rem;margin-top:8px">No per-seat fees. No subscriptions to juggle. Pay once, update annually.</p>
+      <div class="pricing-cards">
+        <div class="price-card featured">
+          <div class="price-badge">Most popular</div>
+          <div class="price-name">New Handbook</div>
+          <div class="price-amount"><sup>$</sup>149<span style="font-size:1.1rem">.99</span></div>
+          <div class="price-period">one-time · includes first year</div>
+          <ul class="price-features">
+            <li>Full 9-step compliance wizard</li>
+            <li>AI-generated legal prose</li>
+            <li>Multi-state addenda (all 50)</li>
+            <li>Branded PDF (logo + colors)</li>
+            <li>Compliance confidence score</li>
+            <li>E-signature tracking</li>
+            <li>Annual renewal auto-enrolled</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%" onclick="goTo('auth')">Create My Handbook →</button>
+        </div>
+        <div class="price-card">
+          <div class="price-name">Annual Renewal</div>
+          <div class="price-amount"><sup>$</sup>99</div>
+          <div class="price-period">per year · auto-renews</div>
+          <ul class="price-features">
+            <li>Refresh with updated laws</li>
+            <li>Version history & diff view</li>
+            <li>State law change alerts</li>
+            <li>Re-send for e-signatures</li>
+            <li>New PDF download</li>
+            <li>Cancel anytime</li>
+          </ul>
+          <button class="btn btn-ghost" style="width:100%" onclick="goTo('auth')">Start with new handbook</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="testimonials">
+    <div class="section-label">Customer stories</div>
+    <div class="section-title">HR teams love InstantHR</div>
+    <div class="test-grid">
+      <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-text">"We operate in 6 states and our old handbook was a mess of conflicting policies. InstantHR built us a single compliant handbook in under an hour."</p><div class="test-author">Sarah M.</div><div class="test-role">HR Director, TechCorp (180 employees)</div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-text">"The California addendum alone was worth the price. We had no idea about CFRA vs FMLA differences until InstantHR flagged them for us."</p><div class="test-author">James K.</div><div class="test-role">Founder, Logistics Co. (45 employees)</div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-text">"Our attorney reviewed the output and said it was the best AI-generated policy document she'd seen. Saved us $4,000 in legal fees."</p><div class="test-author">Priya L.</div><div class="test-role">COO, Healthcare Startup (90 employees)</div></div>
+    </div>
+  </div>
+
+  <div class="landing-footer"><strong>InstantHR</strong> · instanthr.io · © 2026 · <a href="#" style="color:var(--gray-400)">Privacy</a> · <a href="#" style="color:var(--gray-400)">Terms</a></div>
+</div>
+
+<!-- ══════════════ AUTH ══════════════ -->
+<div id="screen-auth" class="screen">
+  <nav><a class="logo" onclick="goTo('landing')"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="auth-card">
+      <div class="auth-logo"><a class="logo" style="justify-content:center"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a></div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login',this)">Log in</button>
+        <button class="auth-tab" onclick="switchAuthTab('signup',this)">Sign up</button>
+      </div>
+      <div id="auth-login">
+        <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@company.com" value="demo@instanthr.io"></div>
+        <div class="form-group"><label>Password</label><input type="text" id="login-pw" placeholder="••••••••" value="demo1234"></div>
+        <button class="auth-btn" onclick="doLogin()">Log in to InstantHR</button>
+      </div>
+      <div id="auth-signup" style="display:none">
+        <div class="two-col">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Jane"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith"></div>
+        </div>
+        <div class="form-group"><label>Work Email</label><input type="email" placeholder="jane@company.com"></div>
+        <div class="form-group"><label>Password</label><input type="text" placeholder="Min 8 characters"></div>
+        <button class="auth-btn" onclick="doLogin()">Create Account</button>
+      </div>
+      <div class="auth-notice">🔒 Demo mode — click Log in to explore the full product without entering real credentials.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ DASHBOARD ══════════════ -->
+<div id="screen-dashboard" class="screen">
+  <nav>
+    <a class="logo" onclick="goTo('dashboard')"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a>
+    <div class="nav-r">
+      <span class="nav-user">demo@instanthr.io</span>
+      <button class="btn btn-ghost btn-sm" onclick="goTo('landing')">Log out</button>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="dash-header">
+      <div><div class="dash-title">My Handbooks</div><div class="dash-sub">Manage, update, and distribute your employee handbooks</div></div>
+      <button class="btn btn-primary" onclick="startNewHandbook()">+ New Handbook</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Total Handbooks</div><div class="stat-val" id="stat-total">1</div><div class="stat-sub">across all companies</div></div>
+      <div class="stat-card"><div class="stat-label">States Covered</div><div class="stat-val">6</div><div class="stat-sub">active compliance</div></div>
+      <div class="stat-card"><div class="stat-label">Signatures</div><div class="stat-val">12/15</div><div class="stat-sub">employees signed</div></div>
+      <div class="stat-card"><div class="stat-label">Next Renewal</div><div class="stat-val" style="font-size:1.1rem">Jan 2027</div><div class="stat-sub">$99 auto-renews</div></div>
+    </div>
+    <div class="handbooks-grid" id="handbooks-grid">
+      <div class="hb-card" onclick="openHandbook()">
+        <div class="hb-card-top" style="background:linear-gradient(90deg,#2563eb,#7c3aed)"></div>
+        <div class="hb-card-body">
+          <div class="hb-card-name">Acme Corporation — Employee Handbook</div>
+          <div class="hb-card-meta">Created Jan 15, 2026 · Version 2 · 47 pages</div>
+          <div class="hb-badges">
+            <span class="badge badge-green">✓ Active</span>
+            <span class="badge badge-blue">6 states</span>
+            <span class="badge badge-amber">3 flags</span>
+            <span class="badge badge-purple">12/15 signed</span>
+          </div>
+          <div class="hb-card-actions">
+            <button class="btn btn-sm btn-outline-blue" onclick="event.stopPropagation();openHandbook()">View</button>
+            <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();startNewHandbook()">Update</button>
+          </div>
+        </div>
+      </div>
+      <div class="new-hb-card" onclick="startNewHandbook()">
+        <div class="new-hb-icon">+</div>
+        <h3>Create New Handbook</h3>
+        <p>$149.99 one-time · includes first year annual renewal</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ HANDBOOK DETAIL ══════════════ -->
+<div id="screen-detail" class="screen">
+  <nav>
+    <a class="logo" onclick="goTo('dashboard')"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a>
+    <div class="nav-r"><button class="btn btn-ghost btn-sm" onclick="goTo('dashboard')">← Dashboard</button></div>
+  </nav>
+  <div class="main">
+    <div style="margin-bottom:6px"><span class="detail-back" onclick="goTo('dashboard')">← All Handbooks</span></div>
+    <div class="detail-header">
+      <div>
+        <div class="detail-title">Acme Corporation — Employee Handbook</div>
+        <div class="detail-meta">Version 2 · Updated Jan 15, 2026 · 47 pages · 6 states · Next renewal Jan 2027</div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge badge-green">✓ Active</span>
+          <span class="badge badge-amber">⚠ 3 compliance flags</span>
+          <span class="badge badge-purple">12/15 employees signed</span>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="btn btn-outline-blue btn-sm" onclick="downloadPDF()">📄 PDF</button>
+        <button class="btn btn-outline-green btn-sm" onclick="switchDetailTab('esig')">✉ Send for Signatures</button>
+        <button class="btn btn-primary btn-sm" onclick="startNewHandbook()">🔄 Update</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchDetailTab('overview',this)">Overview</button>
+      <button class="tab" onclick="switchDetailTab('compliance',this)">Compliance</button>
+      <button class="tab" onclick="switchDetailTab('versions',this)">Version History</button>
+      <button class="tab" onclick="switchDetailTab('esig',this)">E-Signatures</button>
+    </div>
+
+    <div id="tab-overview" class="tab-content active">
+      <div class="hb-preview" id="detail-preview">Loading handbook content...</div>
+      <div class="output-actions">
+        <button class="btn btn-outline-blue" onclick="downloadPDF()">📄 Download PDF</button>
+        <button class="btn btn-ghost" onclick="downloadTXT()">📝 Download TXT</button>
+      </div>
+    </div>
+
+    <div id="tab-compliance" class="tab-content">
+      <div class="compliance-bar-wrap">
+        <h3>Compliance Confidence Score</h3>
+        <div class="score-row"><span class="score-label">Employment Policies</span><div class="score-bar"><div class="score-fill" style="width:94%;background:var(--green)"></div></div><span class="score-pct" style="color:var(--green)">94%</span></div>
+        <div class="score-row"><span class="score-label">Time Off & Leave</span><div class="score-bar"><div class="score-fill" style="width:88%;background:var(--green)"></div></div><span class="score-pct" style="color:var(--green)">88%</span></div>
+        <div class="score-row"><span class="score-label">Anti-Discrimination</span><div class="score-bar"><div class="score-fill" style="width:97%;background:var(--green)"></div></div><span class="score-pct" style="color:var(--green)">97%</span></div>
+        <div class="score-row"><span class="score-label">State Addenda (CA)</span><div class="score-bar"><div class="score-fill" style="width:76%;background:var(--amber)"></div></div><span class="score-pct" style="color:var(--amber)">76%</span></div>
+        <div class="score-row"><span class="score-label">Benefits & Comp</span><div class="score-bar"><div class="score-fill" style="width:91%;background:var(--green)"></div></div><span class="score-pct" style="color:var(--green)">91%</span></div>
+        <div class="flags-list">
+          <div class="flag-item">⚠️ <div><strong>California Meal & Rest Breaks:</strong> CA requires specific language about 30-min unpaid meal breaks after 5 hours. Attorney review recommended for this section.</div></div>
+          <div class="flag-item">⚠️ <div><strong>Arbitration Clause:</strong> CA AB 51 restricts mandatory arbitration for employment disputes. This clause should be reviewed by CA-licensed counsel before use.</div></div>
+          <div class="flag-item">⚠️ <div><strong>Non-Compete Language:</strong> CA, ND, MN, and OK prohibit most non-compete agreements. The confidentiality section may need adjustment for these states.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-versions" class="tab-content">
+      <div class="version-list">
+        <div class="version-item">
+          <div class="version-info">
+            <h4>Version 2 — Current</h4>
+            <p>Updated Jan 15, 2026 · 47 pages</p>
+            <div class="version-changes">
+              <span class="badge badge-green">+ CA CFRA update</span>
+              <span class="badge badge-blue">+ NY PFL 2026 rates</span>
+              <span class="badge badge-amber">~ PTO policy revised</span>
+            </div>
+          </div>
+          <div class="version-actions">
+            <button class="btn btn-sm btn-outline-blue">View</button>
+            <button class="btn btn-sm btn-ghost">Download</button>
+          </div>
+        </div>
+        <div class="version-item" style="opacity:.7">
+          <div class="version-info">
+            <h4>Version 1 — Previous</h4>
+            <p>Created Mar 3, 2025 · 44 pages</p>
+            <div class="version-changes">
+              <span class="badge badge-gray">Initial handbook</span>
+            </div>
+          </div>
+          <div class="version-actions">
+            <button class="btn btn-sm btn-ghost">View</button>
+            <button class="btn btn-sm btn-ghost">Download</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:var(--brand-light);border-radius:9px;border:1px solid #bfdbfe;font-size:0.83rem;color:var(--brand-dark)">
+        🔔 <strong>Annual renewal active</strong> — Your handbook auto-renews on January 15, 2027 for $99. We'll email you 30 days before with a summary of state law changes that affect your policies.
+      </div>
+    </div>
+
+    <div id="tab-esig" class="tab-content">
+      <div class="esig-wrap">
+        <div class="esig-header">
+          <h3>Employee Acknowledgments</h3>
+          <button class="btn btn-primary btn-sm" onclick="sendToAll()">✉ Send to All Pending</button>
+        </div>
+        <table class="esig-table">
+          <thead><tr><th>Employee</th><th>Email</th><th>Sent</th><th>Status</th><th></th></tr></thead>
+          <tbody id="esig-tbody">
+            <tr><td>Sarah Johnson</td><td>sarah@acme.com</td><td>Jan 15</td><td><span class="sig-status sig-signed">✓ Signed</span></td><td><button class="btn btn-sm btn-ghost" style="padding:4px 10px">View</button></td></tr>
+            <tr><td>Mike Chen</td><td>mike@acme.com</td><td>Jan 15</td><td><span class="sig-status sig-signed">✓ Signed</span></td><td><button class="btn btn-sm btn-ghost" style="padding:4px 10px">View</button></td></tr>
+            <tr><td>Alex Rivera</td><td>alex@acme.com</td><td>Jan 15</td><td><span class="sig-status sig-pending">⏳ Pending</span></td><td><button class="btn btn-sm btn-outline-blue" style="padding:4px 10px" onclick="resend(this)">Resend</button></td></tr>
+            <tr><td>Jamie Lee</td><td>jamie@acme.com</td><td>Jan 16</td><td><span class="sig-status sig-signed">✓ Signed</span></td><td><button class="btn btn-sm btn-ghost" style="padding:4px 10px">View</button></td></tr>
+            <tr><td>Taylor Brooks</td><td>taylor@acme.com</td><td>—</td><td><span class="sig-status sig-pending">⏳ Not Sent</span></td><td><button class="btn btn-sm btn-outline-blue" style="padding:4px 10px" onclick="resend(this)">Send</button></td></tr>
+          </tbody>
+        </table>
+        <div class="add-employee-row">
+          <input type="email" id="new-emp-email" placeholder="employee@company.com">
+          <input type="text" id="new-emp-name" placeholder="Employee Name">
+          <button class="btn btn-primary btn-sm" onclick="addEmployee()">+ Add & Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PAYMENT ══════════════ -->
+<div id="screen-payment" class="screen">
+  <nav><a class="logo" onclick="goTo('dashboard')"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a></div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="payment-card">
+      <div class="payment-title">Complete your order</div>
+      <div class="payment-sub">You'll be taken to the handbook wizard immediately after.</div>
+      <div class="order-summary">
+        <div class="order-row"><span>New Employee Handbook</span><span>$149.99</span></div>
+        <div class="order-row"><span>Annual renewal (auto-enrolls) <span class="tag">saves $50/yr vs new</span></span><span>$99/yr</span></div>
+        <div class="order-row"><span>Today's total</span><span>$149.99</span></div>
+      </div>
+      <div class="sub-notice">🔄 <strong>Annual renewal included:</strong> Your handbook will auto-renew every January for $99 to keep policies current with changing state laws. Cancel anytime from your dashboard.</div>
+      <div class="card-fields">
+        <div class="full"><label style="font-size:.8rem;font-weight:600;color:var(--gray-700);display:block;margin-bottom:5px">Card Number</label><input type="text" placeholder="4242 4242 4242 4242" value="4242 4242 4242 4242"></div>
+        <div><label style="font-size:.8rem;font-weight:600;color:var(--gray-700);display:block;margin-bottom:5px">Expiry</label><input type="text" placeholder="MM/YY" value="12/27"></div>
+        <div><label style="font-size:.8rem;font-weight:600;color:var(--gray-700);display:block;margin-bottom:5px">CVC</label><input type="text" placeholder="123" value="123"></div>
+        <div class="full"><label style="font-size:.8rem;font-weight:600;color:var(--gray-700);display:block;margin-bottom:5px">Name on Card</label><input type="text" placeholder="Jane Smith" value="Demo User"></div>
+      </div>
+      <div class="stripe-notice">🔒 Secured by Stripe · SSL encrypted · PCI compliant</div>
+      <button class="pay-btn" onclick="completePurchase()">Pay $149.99 & Build My Handbook →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ WIZARD ══════════════ -->
+<div id="screen-wizard" class="screen">
+  <nav>
+    <a class="logo" onclick="goTo('dashboard')"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a>
+    <div class="nav-r"><button class="btn btn-ghost btn-sm" onclick="goTo('dashboard')">Save & Exit</button></div>
+  </nav>
+  <div class="main">
+    <div class="wiz-progress">
+      <div class="wiz-step-label" id="wiz-label">Step 1 of 9</div>
+      <div class="wiz-bar"><div class="wiz-fill" id="wiz-fill" style="width:11%"></div></div>
+      <div class="wiz-labels"><span>Company</span><span>Culture</span><span>Branding</span><span>States</span><span>Employment</span><span>Time Off</span><span>Conduct</span><span>HR/Legal</span><span>Benefits</span></div>
+    </div>
+
+    <!-- S1: Company -->
+    <div class="wiz-card" id="ws-1">
+      <h2>🏢 Company Information</h2><p class="sub">Basic details used throughout your handbook.</p>
+      <div class="two-col">
+        <div class="field"><label>Legal Company Name *</label><input type="text" id="c_name" placeholder="Acme Corporation"></div>
+        <div class="field"><label>DBA / Trade Name</label><input type="text" id="c_dba" placeholder="Acme Corp"></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Industry *</label><select id="c_industry"><option value="">Select...</option><option>Technology / Software</option><option>Healthcare / Medical</option><option>Retail / E-commerce</option><option>Manufacturing</option><option>Finance / Banking</option><option>Education</option><option>Hospitality / Food Service</option><option>Construction / Trades</option><option>Professional Services</option><option>Nonprofit</option><option>Media / Marketing</option><option>Legal</option><option>Real Estate</option><option>Transportation / Logistics</option><option>Other</option></select></div>
+        <div class="field"><label>Year Founded</label><input type="text" id="c_founded" placeholder="e.g. 2012"></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Number of Employees *</label><select id="c_size"><option>1–10</option><option>11–25</option><option>26–50</option><option>51–100</option><option>101–200</option><option>201–500</option><option>500+</option></select></div>
+        <div class="field"><label>Effective Date</label><input type="text" id="c_date" placeholder="January 1, 2026"></div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>HR Contact Name & Title</label><input type="text" id="c_hr" placeholder="Jane Smith, HR Director"></div>
+        <div class="field"><label>Company Website</label><input type="text" id="c_web" placeholder="www.acme.com"></div>
+      </div>
+      <div class="field"><label>HQ Address</label><input type="text" id="c_addr" placeholder="123 Main St, Austin TX 78701"></div>
+      <div class="field"><label>Organization Type</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="org_type" data-v="For-Profit Corporation">For-Profit</div>
+          <div class="tog" data-g="org_type" data-v="Nonprofit (501c3)">Nonprofit</div>
+          <div class="tog" data-g="org_type" data-v="LLC">LLC</div>
+          <div class="tog" data-g="org_type" data-v="Partnership">Partnership</div>
+          <div class="tog" data-g="org_type" data-v="Government">Government</div>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Ownership</label>
+          <div class="toggle-group">
+            <div class="tog active" data-g="ownership" data-v="Privately held">Private</div>
+            <div class="tog" data-g="ownership" data-v="Publicly traded (SEC-regulated)">Public</div>
+          </div>
+        </div>
+        <div class="field"><label>Union Workforce?</label>
+          <div class="toggle-group">
+            <div class="tog active" data-g="union" data-v="Non-union">Non-union</div>
+            <div class="tog" data-g="union" data-v="Unionized (CBA applies)">Unionized</div>
+            <div class="tog" data-g="union" data-v="Mixed">Mixed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2: Culture -->
+    <div class="wiz-card" id="ws-2" style="display:none">
+      <h2>💡 Culture, Mission & Values</h2><p class="sub">Shapes the tone and introduction of your handbook.</p>
+      <div class="field"><label>Mission Statement</label><textarea id="c_mission" placeholder="Type your mission, or use the AI generator below..." rows="3"></textarea></div>
+      <div class="ai-panel">
+        <h4>✨ AI Mission Statement Generator</h4>
+        <p>Answer a few questions and we'll draft a professional mission statement for you.</p>
+        <div class="field"><label>What does your company do?</label><input type="text" id="mq_what" placeholder="e.g. We build cloud-based HR software"></div>
+        <div class="field"><label>Who do you serve?</label><input type="text" id="mq_who" placeholder="e.g. Small business owners and HR teams"></div>
+        <div class="field"><label>What problem do you solve?</label><input type="text" id="mq_problem" placeholder="e.g. We eliminate the complexity of HR compliance"></div>
+        <div class="field"><label>What are your core values? (3–5 words)</label><input type="text" id="mq_values" placeholder="e.g. Integrity, innovation, people-first"></div>
+        <div class="field"><label>Tone</label>
+          <div class="toggle-group">
+            <div class="tog active" data-g="mission_tone" data-v="professional and inspiring">Professional</div>
+            <div class="tog" data-g="mission_tone" data-v="bold and aspirational">Bold</div>
+            <div class="tog" data-g="mission_tone" data-v="warm and people-centric">Warm</div>
+            <div class="tog" data-g="mission_tone" data-v="concise and direct">Concise</div>
+          </div>
+        </div>
+        <button class="btn btn-purple" id="btn-gen-mission" onclick="genMission()">✨ Generate Mission Statement</button>
+        <div id="mission-result" style="display:none" class="ai-result">
+          <div class="ai-result-label">✦ AI Generated</div>
+          <div class="ai-result-text" id="mission-result-text"></div>
+          <div class="ai-result-actions">
+            <button class="btn btn-sm btn-outline-blue" onclick="useMission()">Use This</button>
+            <button class="btn btn-sm btn-ghost" onclick="genMission()">Regenerate</button>
+          </div>
+        </div>
+      </div>
+      <hr class="sec-divider">
+      <div class="field"><label>Core Values (optional)</label><input type="text" id="c_values" placeholder="e.g. Integrity, Innovation, Teamwork, Customer-First"></div>
+      <div class="field"><label>Company Culture Description</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="culture" data-v="collaborative and team-oriented">Collaborative</div>
+          <div class="tog" data-g="culture" data-v="fast-paced and entrepreneurial">Fast-paced</div>
+          <div class="tog" data-g="culture" data-v="structured and process-driven">Structured</div>
+          <div class="tog" data-g="culture" data-v="innovative and creative">Innovative</div>
+          <div class="tog" data-g="culture" data-v="mission-driven and purpose-led">Mission-driven</div>
+        </div>
+      </div>
+      <div class="field"><label>Leadership Style</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="leadership" data-v="flat / open-door">Flat / Open-door</div>
+          <div class="tog" data-g="leadership" data-v="hierarchical / traditional">Hierarchical</div>
+          <div class="tog" data-g="leadership" data-v="collaborative / consensus-driven">Consensus-driven</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S3: Branding -->
+    <div class="wiz-card" id="ws-3" style="display:none">
+      <h2>🎨 Branding & Design</h2><p class="sub">Customize your handbook's appearance.</p>
+      <div class="field"><label>Logo</label>
+        <div class="logo-upload" id="logo-drop" onclick="document.getElementById('logo-file').click()">
+          <div id="logo-ph"><div style="font-size:1.8rem;margin-bottom:6px">📁</div><p style="font-size:.83rem;font-weight:600">Click to upload logo</p><p style="font-size:.77rem;color:var(--gray-400);margin-top:3px">PNG, JPG, SVG</p></div>
+          <div id="logo-pv" style="display:none"><img id="logo-img" src="" alt="logo"><p style="font-size:.78rem;color:var(--brand)">Logo uploaded ✓ — click to change</p></div>
+        </div>
+        <input type="file" id="logo-file" accept="image/*">
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Handbook Title</label><input type="text" id="hb_title" value="Employee Handbook"></div>
+        <div class="field"><label>Subtitle (optional)</label><input type="text" id="hb_subtitle" placeholder="Your Guide to Policies & Benefits"></div>
+      </div>
+      <div class="field"><label>Color Theme</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="theme" data-v="navy">🔵 Navy</div>
+          <div class="tog" data-g="theme" data-v="forest">🟢 Forest</div>
+          <div class="tog" data-g="theme" data-v="burgundy">🔴 Burgundy</div>
+          <div class="tog" data-g="theme" data-v="indigo">🟣 Indigo</div>
+          <div class="tog" data-g="theme" data-v="charcoal">⚫ Charcoal</div>
+          <div class="tog" data-g="theme" data-v="teal">🩵 Teal</div>
+        </div>
+      </div>
+      <div class="field"><label>Layout Style</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="layout" data-v="modern">Modern (sidebar)</div>
+          <div class="tog" data-g="layout" data-v="classic">Classic (banner)</div>
+          <div class="tog" data-g="layout" data-v="minimal">Minimal (clean)</div>
+        </div>
+      </div>
+      <div class="field"><label>Font Style</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="font_style" data-v="clean sans-serif">Clean Sans-serif</div>
+          <div class="tog" data-g="font_style" data-v="classic serif">Classic Serif</div>
+          <div class="tog" data-g="font_style" data-v="modern geometric">Modern Geometric</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S4: States -->
+    <div class="wiz-card" id="ws-4" style="display:none">
+      <h2>🗺️ State Coverage</h2><p class="sub">Select all states where employees work — state-specific addenda included automatically.</p>
+      <div class="field"><label>Operating States *</label>
+        <div class="states-grid" id="states-grid"></div>
+        <div class="tags-row" id="state-tags"></div>
+      </div>
+      <div class="field"><label>Primary / HQ State</label>
+        <select id="primary_state"><option value="">Select...</option></select>
+        <p class="hint">Used for governing law clause.</p>
+      </div>
+    </div>
+
+    <!-- S5: Employment -->
+    <div class="wiz-card" id="ws-5" style="display:none">
+      <h2>💼 Employment Basics</h2><p class="sub">Core employment terms and working conditions.</p>
+      <div class="field"><label>Employment Type</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="emp_type" data-v="At-Will Employment">At-Will</div>
+          <div class="tog" data-g="emp_type" data-v="Contract-Based">Contract</div>
+          <div class="tog" data-g="emp_type" data-v="Both">Both</div>
+        </div>
+      </div>
+      <div class="three-col">
+        <div class="field"><label>Work Hours / Week</label><select id="work_hrs"><option>40 (full-time)</option><option>32 hours</option><option>Variable</option></select></div>
+        <div class="field"><label>Pay Frequency</label><select id="pay_freq"><option>Bi-weekly</option><option>Weekly</option><option>Semi-monthly</option><option>Monthly</option></select></div>
+        <div class="field"><label>FLSA Classification</label><select id="flsa"><option>Mix of exempt & non-exempt</option><option>Primarily exempt</option><option>Primarily non-exempt</option></select></div>
+      </div>
+      <div class="field"><label>Overtime Policy</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="overtime" data-v="1.5x after 40 hrs/week">1.5x after 40 hrs</div>
+          <div class="tog" data-g="overtime" data-v="CA daily overtime (1.5x after 8 hrs)">CA daily OT</div>
+          <div class="tog" data-g="overtime" data-v="Exempt only">Exempt only</div>
+        </div>
+      </div>
+      <div class="field"><label>Remote Work</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="remote" data-v="In-office">In-office</div>
+          <div class="tog" data-g="remote" data-v="Hybrid (set schedule)">Hybrid (set)</div>
+          <div class="tog" data-g="remote" data-v="Hybrid (manager discretion)">Hybrid (flex)</div>
+          <div class="tog" data-g="remote" data-v="Fully remote">Fully remote</div>
+        </div>
+      </div>
+      <div class="field"><label>Employee Classifications</label>
+        <div class="cb-group">
+          <label class="cb-item"><input type="checkbox" class="ec" value="Full-Time" checked> Full-Time</label>
+          <label class="cb-item"><input type="checkbox" class="ec" value="Part-Time" checked> Part-Time</label>
+          <label class="cb-item"><input type="checkbox" class="ec" value="Temporary / Seasonal"> Temporary / Seasonal</label>
+          <label class="cb-item"><input type="checkbox" class="ec" value="Independent Contractors"> Independent Contractors</label>
+          <label class="cb-item"><input type="checkbox" class="ec" value="Interns / Volunteers"> Interns / Volunteers</label>
+        </div>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Background Checks</label>
+          <div class="toggle-group">
+            <div class="tog active" data-g="bgcheck" data-v="Required for all hires">All hires</div>
+            <div class="tog" data-g="bgcheck" data-v="Required for certain roles only">Certain roles</div>
+            <div class="tog" data-g="bgcheck" data-v="Not required">Not required</div>
+          </div>
+        </div>
+        <div class="field"><label>Probationary Period</label>
+          <div class="toggle-group">
+            <div class="tog active" data-g="probation" data-v="No probationary period">None</div>
+            <div class="tog" data-g="probation" data-v="30-day introductory period">30 days</div>
+            <div class="tog" data-g="probation" data-v="60-day introductory period">60 days</div>
+            <div class="tog" data-g="probation" data-v="90-day introductory period">90 days</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S6: Time Off -->
+    <div class="wiz-card" id="ws-6" style="display:none">
+      <h2>🌴 Time Off & Leave</h2><p class="sub">PTO structure, accrual rules, and leave policies.</p>
+      <div class="field"><label>PTO Structure</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="pto_type" data-v="front_loaded" onclick="showPto('front_loaded')">Front-Loaded</div>
+          <div class="tog" data-g="pto_type" data-v="accrual" onclick="showPto('accrual')">Accrual-Based</div>
+          <div class="tog" data-g="pto_type" data-v="unlimited" onclick="showPto('unlimited')">Unlimited PTO</div>
+          <div class="tog" data-g="pto_type" data-v="none" onclick="showPto('none')">No PTO</div>
+        </div>
+      </div>
+      <div id="pto-fl" class="sub-opts">
+        <h4>Front-Loaded Details</h4>
+        <div class="two-col">
+          <div class="field"><label>Days / Year</label><select id="fl_days"><option>5 days</option><option>10 days</option><option>15 days</option><option>20 days</option><option>25 days</option></select></div>
+          <div class="field"><label>Granted On</label><select id="fl_when"><option>January 1st</option><option>Anniversary date</option><option>First day</option></select></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Rollover</label><select id="fl_roll"><option>No rollover (use-or-lose)</option><option>Up to 5 days</option><option>Up to 10 days</option><option>Full rollover</option></select></div>
+          <div class="field"><label>Payout on Termination</label><select id="fl_payout"><option>No payout</option><option>All unused paid out</option><option>Prorated only</option></select></div>
+        </div>
+      </div>
+      <div id="pto-acc" class="sub-opts" style="display:none">
+        <h4>Accrual Details</h4>
+        <div class="two-col">
+          <div class="field"><label>Rate</label><select id="acc_rate"><option>1.25 days/mo (15/yr)</option><option>0.83 days/mo (10/yr)</option><option>1.67 days/mo (20/yr)</option><option>Custom</option></select></div>
+          <div class="field"><label>Frequency</label><select id="acc_freq"><option>Per pay period</option><option>Monthly</option><option>Quarterly</option></select></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Cap</label><select id="acc_cap"><option>1.5x annual (standard)</option><option>2x annual</option><option>No cap</option></select></div>
+          <div class="field"><label>Waiting Period</label><select id="acc_wait"><option>Day 1</option><option>30 days</option><option>60 days</option><option>90 days</option></select></div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Rollover</label><select id="acc_roll"><option>Rolls to cap</option><option>Full rollover</option><option>No rollover</option></select></div>
+          <div class="field"><label>Payout on Termination</label><select id="acc_payout"><option>All accrued paid out</option><option>No payout</option><option>Prorated</option></select></div>
+        </div>
+        <div class="field"><label>Tenure Increases</label>
+          <div class="toggle-group">
+            <div class="tog active" data-g="tenure" data-v="None">None</div>
+            <div class="tog" data-g="tenure" data-v="After 2 and 5 years">After 2 & 5 yrs</div>
+            <div class="tog" data-g="tenure" data-v="Every 3 years">Every 3 yrs</div>
+          </div>
+        </div>
+      </div>
+      <div id="pto-unl" class="sub-opts" style="display:none">
+        <h4>Unlimited PTO Details</h4>
+        <div class="two-col">
+          <div class="field"><label>Minimum Required</label><select id="unl_min"><option>No minimum</option><option>5 days/year minimum</option><option>10 days/year minimum</option></select></div>
+          <div class="field"><label>Approval</label>
+            <div class="toggle-group" style="margin-top:8px">
+              <div class="tog active" data-g="pto_appr" data-v="Manager pre-approval">Pre-approval</div>
+              <div class="tog" data-g="pto_appr" data-v="Notify manager">Notify only</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="pto-none" class="sub-opts" style="display:none"><p style="font-size:.83rem;color:var(--gray-600)">No PTO offered. Statutory leave still applies.</p></div>
+      <hr class="sec-divider">
+      <div class="field"><label>Sick Leave Structure</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="sick_type" data-v="Front-loaded">Front-loaded</div>
+          <div class="tog" data-g="sick_type" data-v="Accrual-based">Accrual</div>
+          <div class="tog" data-g="sick_type" data-v="Combined with PTO">Combined with PTO</div>
+          <div class="tog" data-g="sick_type" data-v="Statutory minimum only">Statutory min</div>
+        </div>
+        <p class="hint">State mandates (CA, NY, WA, CO, etc.) auto-included.</p>
+      </div>
+      <div class="two-col">
+        <div class="field"><label>Sick Days / Year</label><select id="sick_days"><option>3 days</option><option>5 days</option><option>7 days</option><option>10 days</option></select></div>
+        <div class="field"><label>Sick Rollover</label><select id="sick_roll"><option>Up to 40 hrs</option><option>Full</option><option>None</option></select></div>
+      </div>
+      <div class="field"><label>Holidays</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="holidays" data-v="11 federal holidays">11 federal</div>
+          <div class="tog" data-g="holidays" data-v="Federal + 2 floating">+2 floating</div>
+          <div class="tog" data-g="holidays" data-v="Federal + 3 floating">+3 floating</div>
+          <div class="tog" data-g="holidays" data-v="Custom calendar">Custom</div>
+        </div>
+      </div>
+      <div class="field"><label>Parental Leave</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="parental" data-v="Unpaid FMLA only">FMLA only</div>
+          <div class="tog" data-g="parental" data-v="2 weeks paid">2 wks</div>
+          <div class="tog" data-g="parental" data-v="4 weeks paid">4 wks</div>
+          <div class="tog" data-g="parental" data-v="8 weeks paid">8 wks</div>
+          <div class="tog" data-g="parental" data-v="12 weeks paid">12 wks</div>
+          <div class="tog" data-g="parental" data-v="16 weeks paid">16 wks</div>
+        </div>
+      </div>
+      <div class="field"><label>Additional Leave Types</label>
+        <div class="cb-group">
+          <label class="cb-item"><input type="checkbox" class="lt" value="Bereavement (3–5 days)" checked> Bereavement Leave</label>
+          <label class="cb-item"><input type="checkbox" class="lt" value="Jury Duty" checked> Jury Duty Leave</label>
+          <label class="cb-item"><input type="checkbox" class="lt" value="Military Leave (USERRA)" checked> Military (USERRA)</label>
+          <label class="cb-item"><input type="checkbox" class="lt" value="FMLA (50+ employees)" checked> FMLA (50+ employees)</label>
+          <label class="cb-item"><input type="checkbox" class="lt" value="Voting Leave"> Voting Leave</label>
+          <label class="cb-item"><input type="checkbox" class="lt" value="Sabbatical (after 5 years)"> Sabbatical Leave</label>
+          <label class="cb-item"><input type="checkbox" class="lt" value="Volunteer / Community Service"> Volunteer Leave</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- S7: Conduct -->
+    <div class="wiz-card" id="ws-7" style="display:none">
+      <h2>📋 Workplace Conduct</h2><p class="sub">Behavioral expectations and standards.</p>
+      <div class="field"><label>Dress Code</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="dress" data-v="Business professional">Business professional</div>
+          <div class="tog" data-g="dress" data-v="Business casual">Business casual</div>
+          <div class="tog" data-g="dress" data-v="Smart casual">Smart casual</div>
+          <div class="tog" data-g="dress" data-v="Casual">Casual</div>
+          <div class="tog" data-g="dress" data-v="Uniforms provided">Uniforms</div>
+        </div>
+      </div>
+      <div class="field"><label>Social Media Policy</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="social" data-v="Restricted during work hours">Restricted during work</div>
+          <div class="tog" data-g="social" data-v="Allowed with discretion">With discretion</div>
+          <div class="tog" data-g="social" data-v="No restrictions">No restrictions</div>
+        </div>
+      </div>
+      <div class="field"><label>Substance Policy</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="substance" data-v="Zero tolerance">Zero tolerance</div>
+          <div class="tog" data-g="substance" data-v="Testing for safety roles">Safety role testing</div>
+          <div class="tog" data-g="substance" data-v="Standard policy">Standard</div>
+        </div>
+      </div>
+      <div class="field"><label>Attendance & Punctuality Policy</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="attendance" data-v="Formal attendance tracking with point system">Point system</div>
+          <div class="tog" data-g="attendance" data-v="Manager-tracked attendance">Manager tracked</div>
+          <div class="tog" data-g="attendance" data-v="Flexible / results-oriented">Flexible / ROWE</div>
+        </div>
+      </div>
+      <div class="field"><label>Additional Conduct Policies</label>
+        <div class="cb-group">
+          <label class="cb-item"><input type="checkbox" class="ct" value="Confidentiality & NDA" checked> Confidentiality & NDA</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Conflict of Interest" checked> Conflict of Interest</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Workplace Violence Prevention" checked> Workplace Violence Prevention</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Computer & Technology Use" checked> Computer & Technology Use</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Personal Relationships / Nepotism"> Nepotism / Personal Relationships</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Company Property Policy"> Company Property</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Travel & Expense Policy"> Travel & Expense Policy</label>
+          <label class="cb-item"><input type="checkbox" class="ct" value="Media & Press Relations Policy"> Media / Press Relations</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- S8: HR Legal -->
+    <div class="wiz-card" id="ws-8" style="display:none">
+      <h2>⚖️ HR & Legal Policies</h2><p class="sub">Compliance protections required by law.</p>
+      <div class="field"><label>EEO / Anti-Discrimination</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="eeo" data-v="Full EEO (Title VII, ADEA, ADA, GINA)">Full EEO</div>
+          <div class="tog" data-g="eeo" data-v="Basic non-discrimination statement">Basic</div>
+        </div>
+      </div>
+      <div class="field"><label>Harassment Policy</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="harassment" data-v="Comprehensive (reporting, investigation, anti-retaliation)">Comprehensive</div>
+          <div class="tog" data-g="harassment" data-v="Standard policy">Standard</div>
+        </div>
+      </div>
+      <div class="field"><label>Discipline Process</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="discipline" data-v="Progressive (verbal→written→final→termination)">Progressive</div>
+          <div class="tog" data-g="discipline" data-v="PIP process">PIP</div>
+          <div class="tog" data-g="discipline" data-v="At-will termination only">At-will only</div>
+        </div>
+      </div>
+      <div class="field"><label>Termination Process</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="termination" data-v="At-will with immediate effect">Immediate</div>
+          <div class="tog" data-g="termination" data-v="2-week notice requested">2-week notice</div>
+          <div class="tog" data-g="termination" data-v="Exit interview required">Exit interview</div>
+        </div>
+      </div>
+      <div class="field"><label>Additional Legal Policies</label>
+        <div class="cb-group">
+          <label class="cb-item"><input type="checkbox" class="lp" value="ADA Accommodation" checked> ADA Accommodation</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="OSHA Safety" checked> OSHA Safety</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="Workers Compensation" checked> Workers' Compensation</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="Whistleblower Protection" checked> Whistleblower Protection</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="Pay Transparency"> Pay Transparency</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="Pregnancy Accommodation (PWFA)" checked> Pregnancy Accommodation (PWFA)</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="Background Check Policy"> Background Check Policy</label>
+          <label class="cb-item"><input type="checkbox" class="lp" value="Drug & Alcohol Testing Policy"> Drug & Alcohol Testing</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- S9: Benefits + Review -->
+    <div class="wiz-card" id="ws-9" style="display:none">
+      <h2>🎁 Benefits & Compensation</h2><p class="sub">Outline your benefit offerings — then review before generating.</p>
+      <div class="field"><label>Health Insurance</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="health" data-v="Medical, Dental & Vision">Medical, Dental & Vision</div>
+          <div class="tog" data-g="health" data-v="Medical & Dental">Medical & Dental</div>
+          <div class="tog" data-g="health" data-v="Medical only">Medical only</div>
+          <div class="tog" data-g="health" data-v="No benefits">None</div>
+        </div>
+      </div>
+      <div class="field"><label>Retirement Plan</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="retirement" data-v="401(k) with employer match">401(k) with match</div>
+          <div class="tog" data-g="retirement" data-v="401(k) no match">401(k) no match</div>
+          <div class="tog" data-g="retirement" data-v="SIMPLE IRA">SIMPLE IRA</div>
+          <div class="tog" data-g="retirement" data-v="None">None</div>
+        </div>
+      </div>
+      <div class="field"><label>Health Insurance Premium Split</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="premium_split" data-v="Company pays 100% for employee">100% company</div>
+          <div class="tog" data-g="premium_split" data-v="80/20 company/employee split">80/20 split</div>
+          <div class="tog" data-g="premium_split" data-v="50/50 split">50/50 split</div>
+          <div class="tog" data-g="premium_split" data-v="Employee pays full premium">Employee pays</div>
+        </div>
+      </div>
+      <div class="field"><label>Benefits Waiting Period</label>
+        <div class="toggle-group">
+          <div class="tog active" data-g="ben_wait" data-v="Day 1">Day 1</div>
+          <div class="tog" data-g="ben_wait" data-v="30 days">30 days</div>
+          <div class="tog" data-g="ben_wait" data-v="60 days">60 days</div>
+          <div class="tog" data-g="ben_wait" data-v="90 days">90 days</div>
+        </div>
+      </div>
+      <div class="field"><label>Additional Benefits</label>
+        <div class="cb-group">
+          <label class="cb-item"><input type="checkbox" class="bp" value="EAP"> Employee Assistance Program (EAP)</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="Tuition Reimbursement"> Tuition Reimbursement</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="Professional Development Budget"> Professional Development</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="Company Equipment"> Company Equipment (laptop/phone)</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="Commuter Benefits"> Commuter / Transit Benefits</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="Wellness / Gym Reimbursement"> Wellness / Gym Reimbursement</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="FSA / HSA"> FSA / HSA</label>
+          <label class="cb-item"><input type="checkbox" class="bp" value="Stock Options / Equity"> Stock Options / Equity</label>
+        </div>
+      </div>
+      <hr class="sec-divider">
+      <h3 style="font-size:.95rem;font-weight:700;margin-bottom:14px;color:var(--gray-900)">✅ Review Summary</h3>
+      <div class="review-grid" id="review-grid"></div>
+    </div>
+
+    <div class="wiz-nav">
+      <button class="btn btn-ghost" id="wiz-back" style="visibility:hidden" onclick="wizPrev()">← Back</button>
+      <button class="btn btn-primary" id="wiz-next" onclick="wizNext()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ GENERATING ══════════════ -->
+<div id="screen-generating" class="screen">
+  <div class="gen-card">
+    <div class="gen-spinner"></div>
+    <div class="gen-title">Building your handbook…</div>
+    <div class="gen-msg" id="gen-msg">Analyzing your company details</div>
+    <div class="gen-steps">
+      <div class="gen-step active" id="gs-1"><div class="gen-step-icon">1</div>Reviewing company & state requirements</div>
+      <div class="gen-step" id="gs-2"><div class="gen-step-icon">2</div>Drafting policy language (Pass 1)</div>
+      <div class="gen-step" id="gs-3"><div class="gen-step-icon">3</div>Compliance review (Pass 2)</div>
+      <div class="gen-step" id="gs-4"><div class="gen-step-icon">4</div>Adding state-specific addenda</div>
+      <div class="gen-step" id="gs-5"><div class="gen-step-icon">5</div>Finalizing & formatting output</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ OUTPUT ══════════════ -->
+<div id="screen-output" class="screen">
+  <nav>
+    <a class="logo" onclick="goTo('dashboard')"><div class="logo-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 2h7l4 4v8H3V2z" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="white" stroke-width="1.4" stroke-linejoin="round"/><line x1="5" y1="8" x2="11" y2="8" stroke="white" stroke-width="1.2" stroke-linecap="round"/><line x1="5" y1="11" x2="9" y2="11" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg></div>Instant<span>HR</span></a>
+    <div class="nav-r">
+      <button class="btn btn-ghost btn-sm" onclick="goTo('dashboard')">← Dashboard</button>
+    </div>
+  </nav>
+  <div class="main">
+    <div class="output-header">
+      <div>
+        <h2 id="out-title" style="font-size:1.3rem;font-weight:800;color:var(--gray-900)"></h2>
+        <div class="output-meta" id="out-meta"></div>
+        <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+          <span class="badge badge-green">✓ Generated</span>
+          <span class="badge badge-amber" id="out-flag-badge">⚠ Reviewing flags…</span>
+        </div>
+      </div>
+    </div>
+    <div class="compliance-banner">
+      <div style="font-size:1.2rem">⚠️</div>
+      <div><h4>Attorney Review Recommended</h4><p>This handbook was generated by AI and is intended as a professional starting point. Before distributing to employees, have a licensed HR attorney review — especially state-specific addenda, arbitration clauses, and any California provisions.</p></div>
+    </div>
+    <div class="hb-preview" id="out-content"></div>
+    <div class="output-actions">
+      <button class="btn btn-primary" onclick="downloadPDF()">📄 Download PDF</button>
+      <button class="btn btn-ghost" onclick="downloadTXT()">📝 Download TXT</button>
+      <button class="btn btn-outline-green" onclick="goTo('detail')">✍ Send for Signatures</button>
+      <button class="btn btn-ghost" onclick="goTo('dashboard')">← Dashboard</button>
+    </div>
+    <div class="legal-disclaimer">⚠️ InstantHR generates AI-assisted handbook drafts for HR professionals. This is not legal advice. Always have a licensed employment attorney review your handbook before distribution. Laws change — your $99/year renewal keeps policies current.</div>
+  </div>
+</div>
+
+<script>
+const ALL_STATES=["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+const HC_STATES=["California","New York","Washington","Massachusetts","Oregon","Colorado","Illinois","New Jersey","Connecticut","Hawaii","Vermont","Rhode Island","Maryland","Minnesota"];
+const THEMES={navy:{r:26,g:47,b:94,hex:'#1a2f5e',light:'#e8edf7'},forest:{r:30,g:58,b:47,hex:'#1e3a2f',light:'#e6f0eb'},burgundy:{r:100,g:20,b:40,hex:'#641428',light:'#f5e8ec'},indigo:{r:49,g:46,b:129,hex:'#312e81',light:'#eeecfb'},charcoal:{r:28,g:28,b:28,hex:'#1c1c1c',light:'#efefef'},teal:{r:14,g:110,b:86,hex:'#0e6e56',light:'#e0f5ee'}};
+
+let curStep=1,totalSteps=9,selStates=[],logoData=null,handbookText='',handbookData={};
+const S={org_type:'For-Profit Corporation',ownership:'Privately held',union:'Non-union',mission_tone:'professional and inspiring',culture:'collaborative and team-oriented',leadership:'flat / open-door',theme:'navy',layout:'modern',font_style:'clean sans-serif',emp_type:'At-Will Employment',overtime:'1.5x after 40 hrs/week',remote:'In-office',bgcheck:'Required for all hires',probation:'No probationary period',pto_type:'front_loaded',sick_type:'Front-loaded',tenure:'None',pto_appr:'Manager pre-approval',holidays:'11 federal holidays',parental:'Unpaid FMLA only',dress:'Business professional',social:'Restricted during work hours',substance:'Zero tolerance',attendance:'Formal attendance tracking with point system',eeo:'Full EEO (Title VII, ADEA, ADA, GINA)',harassment:'Comprehensive (reporting, investigation, anti-retaliation)',discipline:'Progressive (verbal→written→final→termination)',termination:'At-will with immediate effect',health:'Medical, Dental & Vision',retirement:'401(k) with employer match',premium_split:'80/20 company/employee split',ben_wait:'90 days'};
+
+// States
+const sg=document.getElementById('states-grid'),ps=document.getElementById('primary_state');
+ALL_STATES.forEach(s=>{
+  const c=document.createElement('div');c.className='state-chip';c.textContent=s;
+  c.onclick=()=>toggleSt(s,c);sg.appendChild(c);
+  const o=document.createElement('option');o.value=s;o.textContent=s;ps&&ps.appendChild(o);
+});
+function toggleSt(s,chip){
+  if(selStates.includes(s)){selStates=selStates.filter(x=>x!==s);chip.classList.remove('on');}
+  else{selStates.push(s);chip.classList.add('on');}
+  renderTags();
+}
+function removeSt(s){selStates=selStates.filter(x=>x!==s);document.querySelectorAll('.state-chip').forEach(c=>{if(c.textContent===s)c.classList.remove('on');});renderTags();}
+function renderTags(){document.getElementById('state-tags').innerHTML=selStates.map(s=>`<span class="s-tag">${s}<button onclick="removeSt('${s}')">×</button></span>`).join('');}
+
+// Toggles
+document.querySelectorAll('.tog').forEach(b=>{
+  b.addEventListener('click',()=>{
+    const g=b.dataset.g;if(!g)return;
+    document.querySelectorAll(`[data-g="${g}"]`).forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');S[g]=b.dataset.v;
+  });
+});
+
+// Logo
+document.getElementById('logo-file').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{logoData=ev.target.result;document.getElementById('logo-img').src=logoData;document.getElementById('logo-ph').style.display='none';document.getElementById('logo-pv').style.display='block';document.getElementById('logo-drop').classList.add('has');};
+  r.readAsDataURL(f);
+});
+
+// PTO sub
+function showPto(t){['fl','acc','unl','none'].forEach(x=>{const el=document.getElementById('pto-'+x);if(el)el.style.display=x===(t==='front_loaded'?'fl':t==='accrual'?'acc':t==='unlimited'?'unl':'none')?'block':'none';});S.pto_type=t;}
+
+function getChecked(cls){return[...document.querySelectorAll(`.${cls}:checked`)].map(c=>c.value);}
+function v(id){const el=document.getElementById(id);return el?el.value:'';}
+
+// Navigation
+function goTo(screen){
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.style.display='none';
+  });
+  var target=document.getElementById('screen-'+screen);
+  if(target){
+    target.style.display='flex';
+    target.style.flexDirection='column';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function doLogin(){goTo('dashboard');}
+function switchAuthTab(t,el){document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('auth-login').style.display=t==='login'?'block':'none';document.getElementById('auth-signup').style.display=t==='signup'?'block':'none';}
+function resetWizard(){
+  curStep=1;
+  for(let i=1;i<=9;i++){
+    const el=document.getElementById('ws-'+i);
+    if(el) el.style.display = i===1?'block':'none';
+  }
+  updateWiz();
+}
+function startNewHandbook(){resetWizard();goTo('payment');}
+function completePurchase(){resetWizard();goTo('wizard');}
+function openHandbook(){
+  document.getElementById('detail-preview').textContent=handbookText||'Generate a handbook first to view content here. Click "Update" to run the wizard.';
+  goTo('detail');
+}
+
+// Detail tabs
+function switchDetailTab(t,el){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  if(el)el.classList.add('active');
+  else document.querySelectorAll('.tab')[0]?.classList.add('active');
+  const tc=document.getElementById('tab-'+t);if(tc)tc.classList.add('active');
+}
+
+// Wizard nav
+function updateWiz(){
+  document.getElementById('wiz-fill').style.width=(curStep/totalSteps*100)+'%';
+  document.getElementById('wiz-label').textContent=`Step ${curStep} of ${totalSteps}`;
+  document.getElementById('wiz-back').style.visibility=curStep>1?'visible':'hidden';
+  const nb=document.getElementById('wiz-next');
+  if(curStep===totalSteps){nb.textContent='🚀 Generate Handbook';nb.style.background='linear-gradient(135deg,#2563eb,#7c3aed)';}
+  else{nb.textContent='Continue →';nb.style.background='';}
+}
+function wizNext(){
+  if(curStep===totalSteps){runGenerate();return;}
+  const cur=document.getElementById('ws-'+curStep);
+  if(cur) cur.style.display='none';
+  curStep++;
+  const nxt=document.getElementById('ws-'+curStep);
+  if(nxt) nxt.style.display='block';
+  if(curStep===totalSteps) buildReview();
+  updateWiz();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function wizPrev(){
+  if(curStep<=1) return;
+  const cur=document.getElementById('ws-'+curStep);
+  if(cur) cur.style.display='none';
+  curStep--;
+  const prv=document.getElementById('ws-'+curStep);
+  if(prv) prv.style.display='block';
+  updateWiz();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildReview(){
+  const d=gatherData();
+  const rows=[['Company',d.company_name||'—'],['Industry',d.industry||'—'],['States',selStates.length?selStates.slice(0,3).join(', ')+(selStates.length>3?` +${selStates.length-3}`:''):'—'],['Employment',d.emp_type],['PTO',d.pto_label],['Sick Leave',d.sick_days],['Health',d.health],['Retirement',d.retirement]];
+  document.getElementById('review-grid').innerHTML=rows.map(([k,val])=>`<div class="rv"><div>${k}</div><div>${val}</div></div>`).join('');
+}
+
+function gatherData(){
+  let pto_label='No PTO',pto_details='No PTO policy.';
+  const pt=S.pto_type;
+  if(pt==='front_loaded'){const d=v('fl_days'),w=v('fl_when'),r=v('fl_roll'),p=v('fl_payout');pto_label=`Front-loaded: ${d} on ${w}`;pto_details=`PTO: Front-Loaded | ${d} on ${w} | Rollover: ${r} | Termination: ${p}`;}
+  else if(pt==='accrual'){const r=v('acc_rate'),f=v('acc_freq'),c=v('acc_cap'),w=v('acc_wait'),ro=v('acc_roll'),p=v('acc_payout');pto_label=`Accrual: ${r}`;pto_details=`PTO: Accrual | Rate: ${r} | ${f} | Cap: ${c} | Starts: ${w} | Rollover: ${ro} | Tenure: ${S.tenure} | Termination: ${p}`;}
+  else if(pt==='unlimited'){pto_label=`Unlimited PTO`;pto_details=`PTO: Unlimited | Min: ${v('unl_min')} | Approval: ${S.pto_appr}`;}
+  return{company_name:v('c_name'),industry:v('c_industry'),company_size:v('c_size'),eff_date:v('c_date'),mission:v('c_mission'),values:v('c_values'),org_type:S.org_type,ownership:S.ownership,union:S.union,culture:S.culture,leadership:S.leadership,hb_title:v('hb_title')||'Employee Handbook',hb_subtitle:v('hb_subtitle'),theme:S.theme,layout:S.layout,states:selStates,primary_state:v('primary_state'),emp_type:S.emp_type,work_hrs:v('work_hrs'),pay_freq:v('pay_freq'),flsa:v('flsa'),overtime:S.overtime,remote:S.remote,bgcheck:S.bgcheck,probation:S.probation,emp_classes:getChecked('ec'),pto_label,pto_details,sick_days:v('sick_days'),sick_roll:v('sick_roll'),sick_type:S.sick_type,holidays:S.holidays,parental:S.parental,leave_types:getChecked('lt'),dress:S.dress,social:S.social,substance:S.substance,attendance:S.attendance,conduct_extras:getChecked('ct'),eeo:S.eeo,harassment:S.harassment,discipline:S.discipline,termination:S.termination,legal_policies:getChecked('lp'),health:S.health,retirement:S.retirement,premium_split:S.premium_split,ben_wait:S.ben_wait,benefits_extras:getChecked('bp')};
+}
+
+// AI Mission
+async function genMission(){
+  const btn=document.getElementById('btn-gen-mission');
+  btn.disabled=true;btn.innerHTML='<span class="mini-spin"></span> Generating…';
+  const what=v('mq_what'),who=v('mq_who'),problem=v('mq_problem'),values=v('mq_values'),tone=S.mission_tone;
+  try{
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:300,messages:[{role:'user',content:`Write a ${tone} company mission statement in 2-3 sentences. Company does: ${what}. Serves: ${who}. Solves: ${problem}. Values: ${values}. Output only the mission statement, no preamble.`}]})});
+    const data=await res.json();
+    const text=data.content?.map(b=>b.text||'').join('')||'';
+    document.getElementById('mission-result-text').textContent=text;
+    document.getElementById('mission-result').style.display='block';
+    window._missionText=text;
+  }catch(e){alert('Generation failed. Please try again.');}
+  btn.disabled=false;btn.innerHTML='✨ Generate Mission Statement';
+}
+function useMission(){document.getElementById('c_mission').value=window._missionText||'';}
+
+// Generate handbook
+const GEN_STEPS=[['gs-1','Analyzing company & state requirements…'],['gs-2','Drafting policy language (Pass 1)…'],['gs-3','Running compliance review (Pass 2)…'],['gs-4','Adding state-specific addenda…'],['gs-5','Finalizing & formatting output…']];
+async function runGenerate(){
+  goTo('generating');
+  const d=gatherData();handbookData=d;
+  let si=0;
+  const stepInt=setInterval(()=>{
+    if(si>0)document.getElementById(GEN_STEPS[si-1][0])?.classList.replace('active','done');
+    if(si<GEN_STEPS.length){const [id,msg]=GEN_STEPS[si];const el=document.getElementById(id);if(el)el.classList.add('active');document.getElementById('gen-msg').textContent=msg;si++;}
+  },3500);
+  const hc=d.states.filter(s=>HC_STATES.includes(s));
+  const stateList=d.states.length?d.states.join(', '):(d.primary_state||'Not specified');
+  const prompt=`You are a senior HR attorney. Generate a complete, professional Employee Handbook in formal legal prose. No bullet lists — full paragraph policies only. Use clear ALL-CAPS section headers.
+
+COMPANY: ${d.company_name||'The Company'} | Industry: ${d.industry} | Size: ${d.company_size} | Type: ${d.org_type} | ${d.ownership} | Founded: ${v('c_founded')||'N/A'} | Effective: ${d.eff_date||'[Date]'}
+CULTURE: Mission: ${d.mission||'N/A'} | Values: ${d.values||'N/A'} | Culture: ${d.culture} | Leadership: ${d.leadership}
+STATES: ${stateList} | Primary: ${d.primary_state||'N/A'} | High-compliance: ${hc.length?hc.join(', '):'None'}
+EMPLOYMENT: ${d.emp_type} | Hours: ${d.work_hrs} | Pay: ${d.pay_freq} | FLSA: ${d.flsa} | OT: ${d.overtime} | Remote: ${d.remote} | BG Check: ${d.bgcheck} | Probation: ${d.probation} | Classes: ${d.emp_classes.join(', ')||'FT/PT'}
+TIME OFF: ${d.pto_details} | Sick: ${d.sick_days} (${d.sick_type}, rollover: ${d.sick_roll}) | Holidays: ${d.holidays} | Parental: ${d.parental} | Extra leave: ${d.leave_types.join(', ')||'None'}
+CONDUCT: Dress: ${d.dress} | Social: ${d.social} | Substance: ${d.substance} | Attendance: ${d.attendance} | Extra: ${d.conduct_extras.join(', ')||'None'}
+HR/LEGAL: EEO: ${d.eeo} | Harassment: ${d.harassment} | Discipline: ${d.discipline} | Termination: ${d.termination} | Extra: ${d.legal_policies.join(', ')||'None'}
+BENEFITS: ${d.health} | ${d.retirement} | Premium split: ${d.premium_split} | Waiting period: ${d.ben_wait} | Extra: ${d.benefits_extras.join(', ')||'None'}
+
+Write: 1) Welcome letter 2) Table of Contents 3) All policy sections in full prose with ALL-CAPS headers 4) State addenda for each high-compliance state listed 5) Employee Acknowledgment & Signature Page`;
+  try{
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})});
+    clearInterval(stepInt);
+    GEN_STEPS.forEach(([id])=>{const el=document.getElementById(id);if(el){el.classList.remove('active');el.classList.add('done');}});
+    const data=await res.json();
+    handbookText=data.content?.map(b=>b.text||'').join('')||'Error generating handbook.';
+    window._hbText=handbookText;window._hbData=handbookData;
+    setTimeout(()=>{
+      document.getElementById('out-title').textContent=`${d.company_name||'Company'} ${d.hb_title}`;
+      document.getElementById('out-meta').textContent=`${d.states.length} state(s) · ${d.company_size} employees · ${d.industry} · ${new Date().toLocaleDateString()}`;
+      document.getElementById('out-content').textContent=handbookText;
+      document.getElementById('out-flag-badge').textContent=`⚠ ${hc.length?hc.length+' state flags':'Review recommended'}`;
+      document.getElementById('detail-preview').textContent=handbookText;
+      goTo('output');
+    },800);
+  }catch(e){clearInterval(stepInt);alert('Generation failed. Please try again.');}
+}
+
+// E-sig
+function sendToAll(){alert('📧 Reminder emails sent to all pending employees!');}
+function resend(btn){const row=btn.closest('tr');row.querySelector('.sig-status').className='sig-status sig-sent';row.querySelector('.sig-status').textContent='📤 Sent';btn.textContent='Sent';btn.disabled=true;}
+function addEmployee(){
+  const email=document.getElementById('new-emp-email').value;
+  const name=document.getElementById('new-emp-name').value;
+  if(!email||!name){alert('Please enter name and email.');return;}
+  const tbody=document.getElementById('esig-tbody');
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${name}</td><td>${email}</td><td>Today</td><td><span class="sig-status sig-sent">📤 Sent</span></td><td><button class="btn btn-sm btn-ghost" style="padding:4px 10px">View</button></td>`;
+  tbody.appendChild(tr);
+  document.getElementById('new-emp-email').value='';
+  document.getElementById('new-emp-name').value='';
+}
+
+// PDF
+function hexToRgb(h){return{r:parseInt(h.slice(1,3),16),g:parseInt(h.slice(3,5),16),b:parseInt(h.slice(5,7),16)};}
+function lightenRgb(r,g,b,amt){return[Math.min(255,r+amt),Math.min(255,g+amt),Math.min(255,b+amt)];}
+
+async function downloadPDF(){
+  try{
+  const{jsPDF}=window.jspdf;
+  const d=window._hbData||handbookData;
+  const text=window._hbText||handbookText;
+  if(!text){alert('Please generate a handbook first.');return;}
+  const theme=THEMES[d&&d.theme]||THEMES.navy;
+  const TR=theme.r,TG=theme.g,TB=theme.b;
+  const [LR,LG,LB]=lightenRgb(TR,TG,TB,195);
+  const doc=new jsPDF({unit:'pt',format:'letter'});
+  const PW=doc.internal.pageSize.getWidth(),PH=doc.internal.pageSize.getHeight();
+  const ML=60,MR=60,CW=PW-ML-MR;
+  const co=d||{};
+
+  // helpers
+  const F=(r,g,b)=>doc.setFillColor(r,g,b);
+  const K=(r,g,b)=>doc.setDrawColor(r,g,b);
+  const T=(r,g,b)=>doc.setTextColor(r,g,b);
+  const op=v=>doc.setGState(doc.GState({opacity:v}));
+
+  // ── COVER ──
+  F(TR,TG,TB); doc.rect(0,0,PW,PH*0.42,'F');
+  F(255,255,255); doc.rect(0,PH*0.42,PW,PH*0.58,'F');
+  F(TR,TG,TB); doc.rect(0,PH*0.42,PW,5,'F');
+  F(0,0,0); op(0.06); doc.circle(PW-30,PH*0.42-80,140,'F'); op(1);
+  F(255,255,255); op(0.07); doc.circle(50,30,90,'F'); op(1);
+
+  if(logoData){try{doc.addImage(logoData,'PNG',ML,28,150,48,'','FAST');}catch(e){}}
+
+  op(0.55); doc.setFont('helvetica','normal'); doc.setFontSize(8); T(255,255,255);
+  doc.text('E M P L O Y E E   H A N D B O O K', ML, PH*0.42-30); op(1);
+  K(255,255,255); doc.setLineWidth(0.4); op(0.25);
+  doc.line(ML, PH*0.42-18, PW-MR, PH*0.42-18); op(1);
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(36); T(255,255,255);
+  const nLines=doc.splitTextToSize(co.company_name||'Your Company', PW-ML-MR);
+  let ny=PH*0.14; nLines.forEach(l=>{doc.text(l,ML,ny);ny+=44;});
+
+  const wpTop=PH*0.42+24;
+  doc.setFont('helvetica','bold'); doc.setFontSize(20); T(TR,TG,TB);
+  doc.text(co.hb_title||'Employee Handbook', ML, wpTop+22);
+  if(co.hb_subtitle){doc.setFont('helvetica','normal');doc.setFontSize(11);T(100,116,139);doc.text(co.hb_subtitle,ML,wpTop+42);}
+
+  const pills=[co.eff_date?'Effective: '+co.eff_date:null,co.company_size?co.company_size+' Employees':null,(co.states&&co.states.length)?co.states.length+' States':null,co.industry||null].filter(Boolean);
+  let px=ML,py=wpTop+70;
+  pills.forEach(p=>{
+    const pw2=doc.getTextWidth(p)+22;
+    F(LR,LG,LB); doc.roundedRect(px,py-13,pw2,19,9,9,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8);T(TR,TG,TB);
+    doc.text(p,px+11,py); px+=pw2+8;
+    if(px>PW-MR-80){px=ML;py+=26;}
+  });
+
+  F(TR,TG,TB); doc.rect(0,PH*0.42,5,PH*0.58,'F');
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);T(148,163,184);
+  doc.text('CONFIDENTIAL — FOR INTERNAL USE ONLY',PW/2,PH-20,{align:'center'});
+  K(226,232,240);doc.setLineWidth(0.4);doc.line(ML,PH-30,PW-MR,PH-30);
+
+  // ── TOC ──
+  doc.addPage();
+  F(TR,TG,TB);doc.rect(0,0,PW,48,'F');
+  if(logoData){try{doc.addImage(logoData,'PNG',ML,10,76,28,'','FAST');}catch(e){}}
+  doc.setFont('helvetica','bold');doc.setFontSize(8.5);T(255,255,255);
+  doc.text((co.company_name||'Company').toUpperCase(),PW-MR,22,{align:'right'});
+  doc.setFont('helvetica','normal');doc.setFontSize(7);T(255,255,255);op(0.6);
+  doc.text(co.hb_title||'Employee Handbook',PW-MR,36,{align:'right'});op(1);
+  F(TR,TG,TB);doc.rect(0,48,5,PH-48,'F');
+
+  doc.setFont('helvetica','bold');doc.setFontSize(18);T(TR,TG,TB);
+  doc.text('Table of Contents',ML+8,82);
+  K(TR,TG,TB);doc.setLineWidth(2);doc.line(ML+8,88,ML+8+130,88);
+
+  const hdrs=[];
+  text.split('\n').forEach(l=>{const t=l.trim();if(/^[A-Z][A-Z &\/\-:]{6,}$/.test(t)&&t.length<70)hdrs.push(t);});
+  let ty=112,tn=1;
+  hdrs.slice(0,20).forEach(h=>{
+    if(ty>PH-70)return;
+    if(tn%2===0){F(248,250,252);doc.rect(ML+8,ty-12,CW-8,18,'F');}
+    doc.setFont('helvetica','normal');doc.setFontSize(9.5);T(30,41,59);
+    doc.text(tn+'.',ML+12,ty);
+    doc.text(h,ML+30,ty);
+    K(203,213,225);doc.setLineWidth(0.3);
+    const hw=doc.getTextWidth(h);
+    for(let dx=ML+30+hw+8;dx<PW-MR-30;dx+=5){F(203,213,225);doc.circle(dx,ty-2.5,0.55,'F');}
+    doc.setFont('helvetica','bold');doc.setFontSize(9);T(TR,TG,TB);
+    doc.text(String(tn+2),PW-MR-8,ty,{align:'right'});
+    ty+=20;tn++;
+  });
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);T(148,163,184);
+  doc.text('InstantHR · instanthr.io',PW/2,PH-18,{align:'center'});
+
+  // ── CONTENT PAGES ──
+  let pgCount=2;
+  function newPage(){
+    doc.addPage();pgCount++;
+    F(TR,TG,TB);doc.rect(0,0,PW,44,'F');
+    if(logoData){try{doc.addImage(logoData,'PNG',ML,9,68,26,'','FAST');}catch(e){}}
+    doc.setFont('helvetica','bold');doc.setFontSize(8);T(255,255,255);
+    doc.text((co.company_name||'Company').toUpperCase(),PW-MR,19,{align:'right'});
+    doc.setFont('helvetica','normal');doc.setFontSize(7);T(255,255,255);op(0.55);
+    doc.text(co.hb_title||'Employee Handbook',PW-MR,33,{align:'right'});op(1);
+    F(TR,TG,TB);doc.rect(0,44,5,PH-44,'F');
+    K(226,232,240);doc.setLineWidth(0.3);doc.line(ML+8,PH-30,PW-MR,PH-30);
+  }
+
+  newPage();
+  const BT=58,BB=PH-40,LH=15,H1H=22,H2H=18;
+  let cy=BT;
+
+  text.split('\n').forEach(line=>{
+    const l=line.trimEnd();
+    if(!l){cy+=5;return;}
+    const isH1=/^[A-Z][A-Z &\/\-:]{7,}$/.test(l.trim())&&l.trim().length<72;
+    const isH2=/^[A-Z][a-zA-Z &\/\-]{3,50}:$/.test(l.trim())&&!isH1;
+
+    if(isH1){
+      cy+=8;
+      if(cy+H1H+6>BB){addPageNum();newPage();cy=BT;}
+      F(TR,TG,TB);doc.rect(ML+8,cy-14,CW-8,H1H+4,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(10.5);T(255,255,255);
+      doc.text(l.trim(),ML+16,cy+1);
+      cy+=H1H+8;
+    } else if(isH2){
+      cy+=4;
+      if(cy+H2H>BB){addPageNum();newPage();cy=BT;}
+      F(TR,TG,TB);doc.rect(ML+8,cy-12,3,H2H,'F');
+      F(LR,LG,LB);doc.rect(ML+11,cy-12,CW-11,H2H,'F');
+      doc.setFont('helvetica','bold');doc.setFontSize(10);T(TR,TG,TB);
+      doc.text(l.trim(),ML+18,cy);
+      cy+=H2H+5;
+    } else {
+      doc.setFont('helvetica','normal');doc.setFontSize(10);T(51,65,85);
+      const ws=doc.splitTextToSize(l,CW-16);
+      ws.forEach(w=>{
+        if(cy+LH>BB){addPageNum();newPage();cy=BT;doc.setFont('helvetica','normal');doc.setFontSize(10);T(51,65,85);}
+        doc.text(w,ML+8,cy);cy+=LH;
+      });
+    }
+  });
+
+  function addPageNum(){
+    doc.setFont('helvetica','normal');doc.setFontSize(8);T(148,163,184);
+    doc.text(String(pgCount-2),PW-MR,PH-18,{align:'right'});
+  }
+
+  // ── SIGNATURE PAGE ──
+  addPageNum();
+  doc.addPage();pgCount++;
+  F(TR,TG,TB);doc.rect(0,0,PW,44,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(9);T(255,255,255);
+  doc.text('EMPLOYEE ACKNOWLEDGMENT & SIGNATURE',ML,26);
+  F(TR,TG,TB);doc.rect(0,44,5,PH-44,'F');
+
+  doc.setFont('helvetica','bold');doc.setFontSize(17);T(TR,TG,TB);
+  doc.text('Acknowledgment & Signature',ML+8,80);
+  K(TR,TG,TB);doc.setLineWidth(1.5);doc.line(ML+8,87,ML+8+210,87);
+
+  doc.setFont('helvetica','normal');doc.setFontSize(9.5);T(51,65,85);
+  const ack=`I acknowledge that I have received, read, and understood the ${co.company_name||'Company'} Employee Handbook dated ${co.eff_date||'[Date]'}. I agree to comply with all policies herein and understand this handbook does not constitute a contract of employment.`;
+  const aLines=doc.splitTextToSize(ack,CW-16);
+  let ay=106; aLines.forEach(l=>{doc.text(l,ML+8,ay);ay+=14;});
+
+  [['Employee Full Name'],['Signature'],['Date'],['Department'],['Manager / Supervisor']].forEach(([lbl])=>{
+    ay+=18;
+    doc.setFont('helvetica','bold');doc.setFontSize(8);T(TR,TG,TB);
+    doc.text(lbl.toUpperCase(),ML+8,ay);
+    K(203,213,225);doc.setLineWidth(0.7);
+    doc.line(ML+8,ay+16,ML+8+260,ay+16);
+    ay+=20;
+  });
+
+  F(TR,TG,TB);doc.rect(0,PH-46,PW,46,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(11);T(255,255,255);
+  doc.text('InstantHR',ML,PH-22);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);T(255,255,255);op(0.6);
+  doc.text('instanthr.io · AI-Powered HR Compliance',ML,PH-11);op(1);
+  doc.text(`Generated ${new Date().toLocaleDateString()} · ${(co.states&&co.states.length)||1} state(s)`,PW-MR,PH-18,{align:'right'});
+
+  // Fix page numbers
+  const tot=doc.internal.getNumberOfPages();
+  for(let p=3;p<=tot-1;p++){
+    doc.setPage(p);
+    doc.setFont('helvetica','normal');doc.setFontSize(8);T(148,163,184);
+    doc.text(`${p-2} of ${tot-3}`,PW-MR,PH-18,{align:'right'});
+  }
+
+  doc.save(`${(co.company_name||'Company').replace(/[^a-z0-9]/gi,'_')}_Employee_Handbook.pdf`);
+  }catch(err){console.error(err);alert('PDF error: '+err.message);}
+}
+function downloadTXT(){
+  const d=window._hbData||handbookData,text=window._hbText||handbookText;
+  if(!text){alert('Generate a handbook first.');return;}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));a.download=`${d.company_name||'Company'}_Employee_Handbook.txt`;a.click();
+}
+updateWiz();
+</script>
