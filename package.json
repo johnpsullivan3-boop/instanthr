@@ -1,0 +1,8 @@
+{
+    "name": "instanthr",
+    "version": "1.0.0",
+    "description": "InstantHR - AI-powered employee handbook generator",
+    "dependencies": {
+          "stripe": "^14.0.0"
+    }
+}
