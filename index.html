@@ -2167,9 +2167,7 @@ async function finishHirePacket(){
     'Target length: 1500-2500 words. Real legal prose. Use [Company Name], [Address], [HR Contact] placeholders.';
 
   try{
-    var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})});
-    if(!res.ok)throw new Error('API returned '+res.status);
-    var data=await res.json();
+    var data=await callApiWithRetry({model:'claude-sonnet-4-20250514',max_tokens:3500,messages:[{role:'user',content:prompt}]});
     var text=data.content?data.content.map(function(b){return b.text||'';}).join(''):'';
     if(!text)throw new Error('Empty response from API');
     d._generatedText=text;
@@ -2177,7 +2175,12 @@ async function finishHirePacket(){
     GEN_DOCS.hire_last=d;
     apiDone.done=true;
   }catch(e){
-    showToast('Generation failed: '+e.message,'error');
+    console.error('Hire generation error:',e);
+    var msg=e&&e.message?e.message:String(e);
+    if(/Failed to fetch|NetworkError|TypeError/i.test(msg)){
+      msg='Network error reaching the API. This sometimes happens after generating multiple documents back-to-back. Wait 30 seconds and try again.';
+    }
+    showToast('Generation failed: '+msg,'error');
     goTo('hire-workspace');
   }
 }
@@ -2386,6 +2389,34 @@ function advanceGeneratingSteps(apiDoneRef,onComplete){
   return stepInt;
 }
 
+/* Top-level: fetch the Anthropic API with one retry on network/rate errors. */
+async function callApiWithRetry(body){
+  var lastErr;
+  for(var attempt=0;attempt<2;attempt++){
+    try{
+      var r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(r.status===429||r.status===529){
+        if(attempt===0){await new Promise(function(res){setTimeout(res,2000);});continue;}
+        var b='';try{b=await r.text();}catch(e){}
+        throw new Error('Rate limit ('+r.status+'). Wait a moment and try again.'+(b?' '+b.slice(0,100):''));
+      }
+      if(!r.ok){
+        var eb='';try{eb=await r.text();}catch(e2){}
+        throw new Error('API '+r.status+(eb?' — '+eb.slice(0,200):''));
+      }
+      return await r.json();
+    }catch(err){
+      lastErr=err;
+      if(attempt===0&&/Failed to fetch|NetworkError|TypeError/i.test(err.message||String(err))){
+        await new Promise(function(res){setTimeout(res,1500);});
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastErr;
+}
+
 /* ===============================================================
    SEPARATION PACKET GENERATION (actual API call)
    =============================================================== */
@@ -2439,9 +2470,7 @@ async function finishSepPacket(){
     'Target length: 1500-2500 words total. Use real legal prose suitable for an HR attorney to review. Put placeholders like [Company Name], [Address], [HR Contact Name] where specific info is needed.';
 
   try{
-    var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})});
-    if(!res.ok)throw new Error('API returned '+res.status);
-    var data=await res.json();
+    var data=await callApiWithRetry({model:'claude-sonnet-4-20250514',max_tokens:3500,messages:[{role:'user',content:prompt}]});
     var text=data.content?data.content.map(function(b){return b.text||'';}).join(''):'';
     if(!text)throw new Error('Empty response from API');
     d._generatedText=text;
@@ -2449,7 +2478,12 @@ async function finishSepPacket(){
     GEN_DOCS.separation_last=d;
     apiDone.done=true;
   }catch(e){
-    showToast('Generation failed: '+e.message,'error');
+    console.error('Separation generation error:',e);
+    var msg=e&&e.message?e.message:String(e);
+    if(/Failed to fetch|NetworkError|TypeError/i.test(msg)){
+      msg='Network error reaching the API. This sometimes happens after generating multiple documents back-to-back. Wait 30 seconds and try again.';
+    }
+    showToast('Generation failed: '+msg,'error');
     goTo('separation-workspace');
   }
 }
