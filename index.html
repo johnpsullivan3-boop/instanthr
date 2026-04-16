@@ -319,7 +319,10 @@ nav{background:rgba(245,240,232,.92);backdrop-filter:blur(12px);border-bottom:1p
 .field{margin-bottom:20px}
 .field label{display:block;font-size:0.82rem;font-weight:600;color:var(--navy);margin-bottom:6px}
 .field .hint{font-size:0.76rem;color:var(--slate);margin-top:5px;line-height:1.5}
-input[type=text],input[type=email],select,textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border-dark);border-radius:8px;font-size:0.92rem;color:var(--text);background:var(--white);font-family:inherit;transition:border-color .15s}
+input[type=text],input[type=email],input[type=date],input[type=number],select,textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border-dark);border-radius:8px;font-size:0.92rem;color:var(--text);background:var(--white);font-family:inherit;transition:border-color .15s}
+input[type=date]{color-scheme:light}
+input[type=date]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:0.6;transition:opacity .15s}
+input[type=date]::-webkit-calendar-picker-indicator:hover{opacity:1}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(12,29,58,.08)}
 select{appearance:auto}
 select option{background:var(--white);color:var(--text)}
@@ -1196,7 +1199,7 @@ textarea{resize:vertical;min-height:84px}
       </div>
       <div class="two-col">
         <div class="field"><label>Employment Type</label><div class="toggle-group"><div class="tog active" data-hg="emp_type" data-v="Full-time, exempt">FT exempt</div><div class="tog" data-hg="emp_type" data-v="Full-time, non-exempt">FT non-exempt</div><div class="tog" data-hg="emp_type" data-v="Part-time">Part-time</div><div class="tog" data-hg="emp_type" data-v="Contract">Contract</div></div></div>
-        <div class="field"><label>Start Date</label><input type="text" id="h_start" placeholder="March 1, 2026"></div>
+        <div class="field"><label>Start Date</label><input type="date" id="h_start"></div>
       </div>
       <div class="field"><label>Work Arrangement</label><div class="toggle-group"><div class="tog active" data-hg="work_loc" data-v="In-office">In-office</div><div class="tog" data-hg="work_loc" data-v="Hybrid">Hybrid</div><div class="tog" data-hg="work_loc" data-v="Fully remote">Fully remote</div></div></div>
     </div>
@@ -1296,7 +1299,7 @@ textarea{resize:vertical;min-height:84px}
       </div>
       <div class="two-col">
         <div class="field"><label>Work State *</label><select id="s_state"><option value="">Select...</option></select><div class="field-error-msg" id="err-s_state">Required</div><p class="hint">State rules for final-pay timing auto-applied.</p></div>
-        <div class="field"><label>Separation Date *</label><input type="text" id="s_date" placeholder="March 1, 2026"><div class="field-error-msg" id="err-s_date">Required</div></div>
+        <div class="field"><label>Separation Date *</label><input type="date" id="s_date"><div class="field-error-msg" id="err-s_date">Required</div></div>
       </div>
     </div>
 
@@ -1316,7 +1319,7 @@ textarea{resize:vertical;min-height:84px}
     <div class="wiz-card" id="sws-3" style="display:none">
       <h2>Final paycheck</h2><p class="sub">What's owed through the last day.</p>
       <div class="two-col">
-        <div class="field"><label>Final Pay Date</label><input type="text" id="s_final_pay_date" placeholder="Day of separation (auto for CA)"><p class="hint">CA requires same-day for involuntary. We set this automatically.</p></div>
+        <div class="field"><label>Final Pay Date</label><input type="date" id="s_final_pay_date"><p class="hint">Leave blank to default to the separation date. CA requires same-day final pay for involuntary separations — we'll auto-apply if you leave it blank.</p></div>
         <div class="field"><label>Final Paycheck Amount</label><input type="text" id="s_final_amount" placeholder="$4,500 gross"></div>
       </div>
       <div class="field"><label>Include in Final Check</label><div class="cb-group">
@@ -1529,7 +1532,7 @@ textarea{resize:vertical;min-height:84px}
       <h2>Company information</h2><p class="sub">Basic details used throughout your handbook.</p>
       <div class="two-col"><div class="field"><label>Legal Company Name *</label><input type="text" id="c_name" placeholder="Acme Corporation"><div class="field-error-msg" id="err-c_name">Company name is required</div></div><div class="field"><label>DBA / Trade Name</label><input type="text" id="c_dba" placeholder="Acme Corp"></div></div>
       <div class="two-col"><div class="field"><label>Industry *</label><select id="c_industry"><option value="">Select...</option><option>Technology / Software</option><option>Healthcare / Medical</option><option>Retail / E-commerce</option><option>Manufacturing</option><option>Finance / Banking</option><option>Education</option><option>Hospitality / Food Service</option><option>Construction / Trades</option><option>Professional Services</option><option>Nonprofit</option><option>Media / Marketing</option><option>Legal</option><option>Real Estate</option><option>Transportation / Logistics</option><option>Other</option></select><div class="field-error-msg" id="err-c_industry">Please select an industry</div></div><div class="field"><label>Year Founded</label><input type="text" id="c_founded" placeholder="e.g. 2012"></div></div>
-      <div class="two-col"><div class="field"><label>Number of Employees *</label><select id="c_size"><option>1–10</option><option>11–25</option><option>26–50</option><option>51–100</option><option>101–200</option><option>201–500</option><option>500+</option></select></div><div class="field"><label>Effective Date</label><input type="text" id="c_date" placeholder="January 1, 2026"></div></div>
+      <div class="two-col"><div class="field"><label>Number of Employees *</label><select id="c_size"><option>1–10</option><option>11–25</option><option>26–50</option><option>51–100</option><option>101–200</option><option>201–500</option><option>500+</option></select></div><div class="field"><label>Effective Date</label><input type="date" id="c_date"></div></div>
       <div class="two-col"><div class="field"><label>HR Contact Name &amp; Title</label><input type="text" id="c_hr" placeholder="Jane Smith, HR Director"></div><div class="field"><label>Company Website</label><input type="text" id="c_web" placeholder="www.acme.com"></div></div>
       <div class="field"><label>HQ Address</label><input type="text" id="c_addr" placeholder="123 Main St, Austin TX 78701"></div>
       <div class="field"><label>Organization Type</label><div class="toggle-group"><div class="tog active" data-g="org_type" data-v="For-Profit Corporation">For-Profit</div><div class="tog" data-g="org_type" data-v="Nonprofit (501c3)">Nonprofit</div><div class="tog" data-g="org_type" data-v="LLC">LLC</div><div class="tog" data-g="org_type" data-v="Partnership">Partnership</div><div class="tog" data-g="org_type" data-v="Government">Government</div></div></div>
@@ -1684,11 +1687,11 @@ textarea{resize:vertical;min-height:84px}
       <div style="font-size:1.3rem">⚠️</div>
       <div>
         <strong>Attorney review recommended</strong>
-        <p>This handbook was generated by AI and is a professional starting point. Have a licensed HR attorney review before distributing.</p>
+        <p id="out-disclaimer">This document was generated by AI and is a professional starting point. Have a licensed HR attorney review before distributing.</p>
       </div>
     </div>
     <div class="hb-preview" id="out-content"></div>
-    <div class="output-actions">
+    <div class="output-actions" id="out-actions">
       <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
       <button class="btn btn-ghost" onclick="downloadTXT()">Download TXT</button>
       <button class="btn btn-outline-green" onclick="goTo('detail')">Send for signatures</button>
@@ -1708,6 +1711,17 @@ var S={org_type:'For-Profit Corporation',ownership:'Privately held',union:'Non-u
 
 function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'')+' show';setTimeout(function(){t.classList.remove('show');},3500);}
 function createEl(tag,attrs,text){var e=document.createElement(tag);if(attrs)Object.keys(attrs).forEach(function(k){e.setAttribute(k,attrs[k]);});if(text)e.textContent=text;return e;}
+/* Format an ISO date string (YYYY-MM-DD from <input type="date">) into "Month D, YYYY".
+   Returns the original value if it can't be parsed, so existing text fields still work. */
+function formatDate(iso){
+  if(!iso||typeof iso!=='string')return iso||'';
+  var m=iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m)return iso;
+  var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var y=parseInt(m[1],10),mo=parseInt(m[2],10)-1,d=parseInt(m[3],10);
+  if(mo<0||mo>11)return iso;
+  return months[mo]+' '+d+', '+y;
+}
 
 function goTo(screen){
   document.querySelectorAll('.screen').forEach(function(s){s.style.display='none';});
@@ -1814,7 +1828,7 @@ function gatherData(){
   if(pt==='front_loaded'){var d=v('fl_days'),w=v('fl_when'),r=v('fl_roll'),p=v('fl_payout');pto_label='Front-loaded: '+d+' on '+w;pto_details='PTO: Front-Loaded | '+d+' on '+w+' | Rollover: '+r+' | Termination: '+p;}
   else if(pt==='accrual'){var ra=v('acc_rate'),fr=v('acc_freq'),ca=v('acc_cap'),wa=v('acc_wait'),ro=v('acc_roll'),pa=v('acc_payout');pto_label='Accrual: '+ra;pto_details='PTO: Accrual | Rate: '+ra+' | '+fr+' | Cap: '+ca+' | Starts: '+wa+' | Rollover: '+ro+' | Tenure: '+S.tenure+' | Termination: '+pa;}
   else if(pt==='unlimited'){pto_label='Unlimited PTO';pto_details='PTO: Unlimited | Min: '+v('unl_min')+' | Approval: '+S.pto_appr;}
-  return{company_name:v('c_name'),industry:v('c_industry'),company_size:v('c_size'),eff_date:v('c_date'),mission:v('c_mission'),values:v('c_values'),org_type:S.org_type,ownership:S.ownership,union:S.union,culture:S.culture,leadership:S.leadership,hb_title:v('hb_title')||'Employee Handbook',hb_subtitle:v('hb_subtitle'),theme:S.theme,layout:S.layout,states:selStates,primary_state:v('primary_state'),emp_type:S.emp_type,work_hrs:v('work_hrs'),pay_freq:v('pay_freq'),flsa:v('flsa'),overtime:S.overtime,remote:S.remote,bgcheck:S.bgcheck,probation:S.probation,emp_classes:getChecked('ec'),pto_label:pto_label,pto_details:pto_details,sick_days:v('sick_days'),sick_roll:v('sick_roll'),sick_type:S.sick_type,holidays:S.holidays,parental:S.parental,leave_types:getChecked('lt'),dress:S.dress,social:S.social,substance:S.substance,attendance:S.attendance,conduct_extras:getChecked('ct'),eeo:S.eeo,harassment:S.harassment,discipline:S.discipline,termination:S.termination,legal_policies:getChecked('lp'),health:S.health,retirement:S.retirement,premium_split:S.premium_split,ben_wait:S.ben_wait,benefits_extras:getChecked('bp')};
+  return{company_name:v('c_name'),industry:v('c_industry'),company_size:v('c_size'),eff_date:formatDate(v('c_date')),mission:v('c_mission'),values:v('c_values'),org_type:S.org_type,ownership:S.ownership,union:S.union,culture:S.culture,leadership:S.leadership,hb_title:v('hb_title')||'Employee Handbook',hb_subtitle:v('hb_subtitle'),theme:S.theme,layout:S.layout,states:selStates,primary_state:v('primary_state'),emp_type:S.emp_type,work_hrs:v('work_hrs'),pay_freq:v('pay_freq'),flsa:v('flsa'),overtime:S.overtime,remote:S.remote,bgcheck:S.bgcheck,probation:S.probation,emp_classes:getChecked('ec'),pto_label:pto_label,pto_details:pto_details,sick_days:v('sick_days'),sick_roll:v('sick_roll'),sick_type:S.sick_type,holidays:S.holidays,parental:S.parental,leave_types:getChecked('lt'),dress:S.dress,social:S.social,substance:S.substance,attendance:S.attendance,conduct_extras:getChecked('ct'),eeo:S.eeo,harassment:S.harassment,discipline:S.discipline,termination:S.termination,legal_policies:getChecked('lp'),health:S.health,retirement:S.retirement,premium_split:S.premium_split,ben_wait:S.ben_wait,benefits_extras:getChecked('bp')};
 }
 
 async function genMission(){
@@ -2067,7 +2081,7 @@ function hireWizPrev(){
 function gatherHireData(){
   return{
     first:v('h_first'),last:v('h_last'),email:v('h_email'),state:v('h_state'),city:v('h_city'),
-    title:v('h_title'),dept:v('h_dept'),mgr:v('h_mgr'),start:v('h_start'),
+    title:v('h_title'),dept:v('h_dept'),mgr:v('h_mgr'),start:formatDate(v('h_start')),
     emp_type:HS.emp_type,work_loc:HS.work_loc,
     salary:v('h_salary'),pay_freq:v('h_pay_freq'),
     signon:v('h_signon'),bonus:v('h_bonus'),equity:v('h_equity'),
@@ -2101,20 +2115,102 @@ function buildHireReview(){
   });
 }
 
-function finishHirePacket(){
+async function finishHirePacket(){
   var d=gatherHireData();
-  // Add doc card to hire workspace
+  // Add doc card immediately
   var grid=document.getElementById('hire-docs-grid');
   var newCard=document.createElement('div');
   newCard.className='doc-card';
-  newCard.innerHTML='<div class="doc-card-head"><div class="doc-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div style="flex:1"><div class="doc-card-name">'+d.first+' '+d.last+' — Offer Letter</div><div class="doc-card-meta">'+d.title+' · '+d.state+' · Just now</div></div><span class="badge badge-gold">Draft</span></div><div class="doc-card-desc">'+d.documents.length+' documents · '+(d.benefits.length?d.benefits.length+' benefits':'Custom benefits')+'</div><div class="doc-card-actions"><button class="btn btn-sm btn-primary">Send for signature</button><button class="btn btn-sm btn-ghost">Edit</button></div>';
+  newCard.innerHTML='<div class="doc-card-head"><div class="doc-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div style="flex:1"><div class="doc-card-name">'+d.first+' '+d.last+' — Offer Letter</div><div class="doc-card-meta">'+d.title+' · '+d.state+' · Just now</div></div><span class="badge badge-gold">Draft</span></div><div class="doc-card-desc">'+d.documents.length+' documents · '+(d.benefits.length?d.benefits.length+' benefits':'Custom benefits')+'</div><div class="doc-card-actions"><button class="btn btn-sm btn-primary" onclick="viewGeneratedHire()">Review packet</button><button class="btn btn-sm btn-ghost">Edit</button></div>';
   grid.insertBefore(newCard,grid.firstChild);
-  showToast('Offer packet generated — ready to send for signature','success');
-  goTo('hire-workspace');
+
+  showGenerating([
+    'Reviewing state-specific hiring rules',
+    'Drafting the offer letter',
+    'Adding NDA and PIIA clauses',
+    'Preparing I-9 and onboarding docs',
+    'Assembling and formatting the packet'
+  ]);
+
+  var apiDone={done:false};
+  advanceGeneratingSteps(apiDone,function(){displayGeneratedHire(d);});
+
+  var stateNotes='';
+  if(d.state==='California')stateNotes='CA: Cannot require mandatory arbitration as condition of employment (AB 51). Non-competes void. Include pay range.';
+  else if(d.state==='New York')stateNotes='NY: Pay transparency required — include salary range. NYC Earned Sick Leave applies.';
+  else if(d.state==='Colorado')stateNotes='CO: Include pay range and benefits disclosure (Equal Pay Act). ';
+  else if(d.state==='Washington')stateNotes='WA: Pay transparency required. Include salary range and benefits.';
+  else if(d.state==='Massachusetts')stateNotes='MA: Pay transparency law (effective 2025) — include salary range.';
+  else if(d.state==='Montana')stateNotes='MT: After probationary period, only for-cause termination allowed (Wrongful Discharge from Employment Act).';
+
+  var prompt='You are a senior employment attorney. Draft a COMPLETE hiring packet in formal legal prose. Use ALL-CAPS section headers between documents. Full paragraph prose — no bullet lists.\n\n'+
+    'CANDIDATE: '+d.first+' '+d.last+' ('+d.email+') · '+(d.city?d.city+', ':'')+d.state+'\n'+
+    'ROLE: '+d.title+' · Department: '+(d.dept||'N/A')+' · Reports to: '+(d.mgr||'Manager')+'\n'+
+    'EMPLOYMENT: '+d.emp_type+' · Work arrangement: '+d.work_loc+' · Start date: '+(d.start||'TBD')+'\n'+
+    'COMPENSATION: Base '+d.salary+' · Pay frequency '+d.pay_freq+'\n'+
+    'SIGN-ON BONUS: '+(d.signon||'None')+'\n'+
+    'ANNUAL BONUS: '+(d.bonus||'None')+'\n'+
+    'EQUITY: '+(d.equity||'None')+'\n'+
+    'BENEFITS: '+(d.benefits.join('; ')||'Standard package')+'\n'+
+    'AT-WILL: '+d.at_will+'\n'+
+    'OFFER EXPIRES: '+d.expires+'\n'+
+    'DOCUMENTS TO INCLUDE: '+d.documents.join(', ')+'\n'+
+    'STATE-SPECIFIC NOTES: '+stateNotes+'\n\n'+
+    'Write these documents in this exact order, each with an ALL-CAPS header:\n'+
+    '1) OFFER LETTER (formal letter with all comp details, start date, benefits summary, at-will language, offer expiration, signature lines)\n'+
+    (d.documents.indexOf('Mutual NDA')>=0?'2) MUTUAL NON-DISCLOSURE AGREEMENT\n':'')+
+    (d.documents.indexOf('Proprietary Information and Inventions Agreement (PIIA)')>=0?'3) PROPRIETARY INFORMATION AND INVENTIONS AGREEMENT\n':'')+
+    (d.documents.indexOf('I-9 Employment Eligibility Verification')>=0?'4) I-9 EMPLOYMENT ELIGIBILITY VERIFICATION NOTICE (explanation and acceptable document list)\n':'')+
+    (d.documents.indexOf('Non-Solicitation Agreement')>=0?'5) NON-SOLICITATION AGREEMENT (do not include for CA, ND, MN, OK residents)\n':'')+
+    (d.documents.indexOf('Background Check Consent')>=0?'6) BACKGROUND CHECK CONSENT AND FCRA DISCLOSURE\n':'')+
+    'End with a SIGNATURE BLOCK section.\n\n'+
+    'Target length: 1500-2500 words. Real legal prose. Use [Company Name], [Address], [HR Contact] placeholders.';
+
+  try{
+    var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})});
+    if(!res.ok)throw new Error('API returned '+res.status);
+    var data=await res.json();
+    var text=data.content?data.content.map(function(b){return b.text||'';}).join(''):'';
+    if(!text)throw new Error('Empty response from API');
+    d._generatedText=text;
+    d._filename=((d.first||'Candidate')+'_'+(d.last||'')+'_Offer_Packet').replace(/[^a-zA-Z0-9_]/g,'_');
+    GEN_DOCS.hire_last=d;
+    apiDone.done=true;
+  }catch(e){
+    showToast('Generation failed: '+e.message,'error');
+    goTo('hire-workspace');
+  }
+}
+
+function displayGeneratedHire(d){
+  var text=d._generatedText;
+  if(!text)return;
+  var title=d.first+' '+d.last+' — Offer Packet';
+  var meta=d.title+' · '+d.state+' · '+d.salary+' · '+d.documents.length+' document(s)';
+  var disclaimer='This offer packet was generated by AI. Have a licensed employment attorney review before sending to the candidate — especially the state-specific compliance language.';
+  var outData={
+    company_name:d.first+' '+d.last+' Offer',
+    states:[d.state],
+    company_size:'1',
+    industry:'Hiring',
+    theme:'navy',
+    eff_date:d.start||'TBD',
+    hb_title:'Offer Packet',
+    _flags:[]
+  };
+  showGeneratedDoc('hire',title,meta,text,outData,d._filename,'hire-workspace',disclaimer);
+  showToast('Offer packet generated','success');
+}
+
+function viewGeneratedHire(){
+  var last=GEN_DOCS.hire_last;
+  if(!last||!last._generatedText){showToast('Packet not available — try generating a new one','error');return;}
+  displayGeneratedHire(last);
 }
 
 function viewHireDoc(name){
-  showToast('Opening '+name+' (demo)','success');
+  // Seeded demo cards — show a generic message
+  showToast('Opening '+name+' — demo preview','success');
 }
 
 /* ===============================================================
@@ -2176,11 +2272,15 @@ function sepWizPrev(){
 }
 
 function gatherSepData(){
+  var sepDateRaw=v('s_date');
+  var finalPayRaw=v('s_final_pay_date');
+  // If final pay date wasn't picked, default it to the separation date (which is the right answer for CA involuntary anyway)
+  if(!finalPayRaw)finalPayRaw=sepDateRaw;
   return{
     first:v('s_first'),last:v('s_last'),email:v('s_email'),title:v('s_title'),
-    state:v('s_state'),date:v('s_date'),
+    state:v('s_state'),date:formatDate(sepDateRaw),
     sep_type:SS.sep_type,reason:v('s_reason'),protections:getChecked('s_protect'),
-    final_pay_date:v('s_final_pay_date'),final_amount:v('s_final_amount'),
+    final_pay_date:formatDate(finalPayRaw),final_amount:v('s_final_amount'),
     pay_items:getChecked('s_pay'),pay_method:SS.pay_method,
     sev_offered:SS.sev_offered,sev_amt:v('s_sev_amt'),sev_delivery:v('s_sev_delivery'),
     release:SS.release,review_period:SS.review_period,sev_benefits:getChecked('s_sev_ben'),
@@ -2214,21 +2314,174 @@ function buildSepReview(){
   });
 }
 
-function finishSepPacket(){
+/* ----- Shared generated-document state ----- */
+var GEN_DOCS={}; // { separation:{text,data,name,filename}, hire:{...}, posters:{...} }
+
+/* ----- Configure the output screen for a non-handbook product ----- */
+function showGeneratedDoc(product,title,meta,text,data,filename,backWorkspace,disclaimer){
+  GEN_DOCS[product]={text:text,data:data,filename:filename,product:product};
+  // Also set legacy handbook vars so the existing PDF/TXT generator can reuse
+  window._lastProduct=product;
+  window._hbText=text;
+  window._hbData=Object.assign({},data,{company_name:data.company_name||(data.first?data.first+' '+data.last:filename)});
+  handbookText=text;handbookData=window._hbData;
+  document.getElementById('out-title').textContent=title;
+  document.getElementById('out-meta').textContent=meta;
+  document.getElementById('out-content').textContent=text;
+  document.getElementById('out-flag-badge').textContent=(data._flags&&data._flags.length)?('⚠ '+data._flags.length+' flag(s)'):'⚠ Review recommended';
+  document.getElementById('out-disclaimer').textContent=disclaimer||'This document was generated by AI and is a professional starting point. Have a licensed HR attorney review before distributing.';
+  // Rebuild action bar to route back to the right workspace
+  var actions=document.getElementById('out-actions');
+  actions.innerHTML='<button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button><button class="btn btn-ghost" onclick="downloadTXT()">Download TXT</button><button class="btn btn-outline-green" onclick="showToast(\'Signature request sent\',\'success\')">Send for signature</button><button class="btn btn-ghost" onclick="goTo(\''+backWorkspace+'\')">← Workspace</button>';
+  goTo('output');
+}
+
+/* ----- Generic mini-generating overlay (uses the existing screen-generating) ----- */
+function showGenerating(stepLabels){
+  goTo('generating');
+  // Reset all existing gs-* steps
+  ['gs-1','gs-2','gs-3','gs-4','gs-5'].forEach(function(id){
+    var el=document.getElementById(id);if(el){el.classList.remove('active','done');}
+  });
+  // Relabel the first 5 steps if custom labels provided
+  if(stepLabels&&stepLabels.length){
+    for(var i=0;i<5;i++){
+      var el=document.getElementById('gs-'+(i+1));
+      if(el){
+        if(i<stepLabels.length){
+          el.innerHTML='<div class="gen-step-icon">'+(i+1)+'</div>'+stepLabels[i];
+          el.style.display='flex';
+        }else{
+          el.style.display='none';
+        }
+      }
+    }
+  }
+  var first=document.getElementById('gs-1');
+  if(first)first.classList.add('active');
+  var msg=document.getElementById('gen-msg');
+  if(msg&&stepLabels&&stepLabels[0])msg.textContent=stepLabels[0];
+}
+
+function advanceGeneratingSteps(apiDoneRef,onComplete){
+  var steps=['gs-1','gs-2','gs-3','gs-4','gs-5'].map(function(id){return document.getElementById(id);}).filter(function(el){return el&&el.style.display!=='none';});
+  var si=0;
+  var stepInt=setInterval(function(){
+    if(si<steps.length-1){
+      steps[si].classList.remove('active');
+      steps[si].classList.add('done');
+      si++;
+      steps[si].classList.add('active');
+      var msg=document.getElementById('gen-msg');
+      if(msg&&steps[si]){
+        var txt=steps[si].textContent.replace(/^\d+/,'').trim();
+        msg.textContent=txt;
+      }
+    }else if(apiDoneRef.done){
+      clearInterval(stepInt);
+      steps.forEach(function(el){el.classList.remove('active');el.classList.add('done');});
+      setTimeout(onComplete,500);
+    }
+  },1800);
+  return stepInt;
+}
+
+/* ===============================================================
+   SEPARATION PACKET GENERATION (actual API call)
+   =============================================================== */
+async function finishSepPacket(){
   var d=gatherSepData();
+  d._flags=d.protections||[];
+  // Insert doc card first
   var grid=document.getElementById('sep-docs-grid');
-  // Insert before the "new" card
+  var flagBadge=d.protections.length?'<span class="badge badge-red">⚠ Review</span>':'<span class="badge badge-gold">Draft</span>';
   var newCard=document.createElement('div');
   newCard.className='doc-card';
-  var flagBadge=d.protections.length?'<span class="badge badge-red">⚠ Review</span>':'<span class="badge badge-gold">Draft</span>';
-  newCard.innerHTML='<div class="doc-card-head"><div class="doc-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div style="flex:1"><div class="doc-card-name">'+d.first+' '+d.last+' — Separation Packet</div><div class="doc-card-meta">'+d.sep_type+' · '+d.state+' · '+d.date+'</div></div>'+flagBadge+'</div><div class="doc-card-desc">'+d.documents.length+' documents · '+(d.sev_offered==='Yes'?'Severance offered':'No severance')+'</div><div class="doc-card-actions"><button class="btn btn-sm btn-primary">Review &amp; send</button><button class="btn btn-sm btn-ghost">Edit</button></div>';
+  newCard.id='sep-card-'+Date.now();
+  newCard.innerHTML='<div class="doc-card-head"><div class="doc-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><div style="flex:1"><div class="doc-card-name">'+d.first+' '+d.last+' — Separation Packet</div><div class="doc-card-meta">'+d.sep_type+' · '+d.state+' · '+d.date+'</div></div>'+flagBadge+'</div><div class="doc-card-desc">'+d.documents.length+' documents · '+(d.sev_offered==='Yes'?'Severance offered':'No severance')+'</div><div class="doc-card-actions"><button class="btn btn-sm btn-primary" onclick="viewGeneratedSep()">Review packet</button><button class="btn btn-sm btn-ghost">Edit</button></div>';
   grid.insertBefore(newCard,grid.firstChild);
-  if(d.protections.length){
-    showToast('Packet generated — attorney review flagged due to protected characteristics','error');
-  }else{
-    showToast('Separation packet generated — review before sending','success');
+
+  // Show generating screen with separation-specific labels
+  showGenerating([
+    'Reviewing state-specific final-pay rules',
+    'Drafting separation letter & final pay summary',
+    'Building release agreement (if applicable)',
+    'Adding COBRA & state unemployment notices',
+    'Assembling and formatting the packet'
+  ]);
+
+  var apiDone={done:false};
+  advanceGeneratingSteps(apiDone,function(){
+    displayGeneratedSep(d);
+  });
+
+  // Build prompt
+  var hcFlags=d.protections.length?'IMPORTANT ATTORNEY-REVIEW FLAGS: '+d.protections.join('; ')+'. Include an attorney review notice at the top of the packet.':'';
+  var sevSection=d.sev_offered==='Yes'?('Severance offered: '+(d.sev_amt||'[amount]')+' · Delivery: '+d.sev_delivery+' · Release: '+d.release+' · Review period: '+d.review_period+' · Benefits: '+(d.sev_benefits.join('; ')||'None')):'No severance offered.';
+  var prompt='You are a senior HR employment attorney. Draft a COMPLETE separation packet with all requested documents in formal legal prose. Use ALL-CAPS section headers to separate each document. No bullet lists — full paragraph prose.\n\n'+
+    'EMPLOYEE: '+d.first+' '+d.last+' ('+d.email+') · Title: '+(d.title||'[Title]')+' · Work state: '+d.state+' · Separation date: '+d.date+'\n'+
+    'SEPARATION TYPE: '+d.sep_type+'\n'+
+    'INTERNAL REASON (do not disclose in letter unless for-cause): '+(d.reason||'[See HR file]')+'\n'+
+    'FINAL PAY: '+(d.final_amount||'[amount]')+' · Pay date: '+(d.final_pay_date||d.date)+' · Method: '+d.pay_method+' · Items: '+(d.pay_items.join('; ')||'Regular wages + accrued PTO')+'\n'+
+    'SEVERANCE: '+sevSection+'\n'+
+    'DOCUMENTS TO INCLUDE: '+d.documents.join(', ')+'\n'+
+    'RETURN OF PROPERTY DEADLINE: '+d.return_deadline+'\n'+
+    hcFlags+'\n\n'+
+    'Write these documents in this exact order, each with an ALL-CAPS header:\n'+
+    '1) SEPARATION LETTER (addressed to employee, formal tone, states last day, confirms final pay, benefits continuation info, return of property, next steps)\n'+
+    '2) FINAL PAYCHECK SUMMARY (itemized breakdown, with state-specific timing rule for '+d.state+' explicitly noted)\n'+
+    (d.documents.indexOf('COBRA Election Notice')>=0?'3) COBRA ELECTION NOTICE (federal COBRA notice with 60-day election window)\n':'')+
+    (d.documents.indexOf('State Unemployment Insurance Notice')>=0?'4) STATE UNEMPLOYMENT INSURANCE NOTICE (for '+d.state+')\n':'')+
+    (d.sev_offered==='Yes'?'5) SEPARATION AND RELEASE AGREEMENT (with '+d.review_period+' review period, OWBPA-compliant if 40+, release of claims, non-disparagement if applicable, severance terms)\n':'')+
+    (d.documents.indexOf('Return of Company Property Acknowledgment')>=0?'6) RETURN OF COMPANY PROPERTY ACKNOWLEDGMENT (itemized list placeholders, deadline '+d.return_deadline+')\n':'')+
+    (d.documents.indexOf('Continuing Confidentiality Reminder')>=0?'7) CONTINUING CONFIDENTIALITY REMINDER\n':'')+
+    'End with a SIGNATURE BLOCK section.\n\n'+
+    'Target length: 1500-2500 words total. Use real legal prose suitable for an HR attorney to review. Put placeholders like [Company Name], [Address], [HR Contact Name] where specific info is needed.';
+
+  try{
+    var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:4000,messages:[{role:'user',content:prompt}]})});
+    if(!res.ok)throw new Error('API returned '+res.status);
+    var data=await res.json();
+    var text=data.content?data.content.map(function(b){return b.text||'';}).join(''):'';
+    if(!text)throw new Error('Empty response from API');
+    d._generatedText=text;
+    d._filename=((d.first||'Employee')+'_'+(d.last||'')+'_Separation_Packet').replace(/[^a-zA-Z0-9_]/g,'_');
+    GEN_DOCS.separation_last=d;
+    apiDone.done=true;
+  }catch(e){
+    showToast('Generation failed: '+e.message,'error');
+    goTo('separation-workspace');
   }
-  goTo('separation-workspace');
+}
+
+function displayGeneratedSep(d){
+  var text=d._generatedText;
+  if(!text)return;
+  var title=d.first+' '+d.last+' — Separation Packet';
+  var meta=d.sep_type+' · '+d.state+' · '+d.date+' · '+d.documents.length+' document(s)';
+  var disclaimer='This separation packet was generated by AI'+(d.protections.length?' and has been flagged for attorney review due to protected characteristics. ':'. ')+'Have a licensed employment attorney review before delivering to the employee.';
+  var outData={
+    company_name:d.first+' '+d.last+' Separation',
+    states:[d.state],
+    company_size:'1',
+    industry:'Separation',
+    theme:'navy',
+    eff_date:d.date,
+    hb_title:'Separation Packet',
+    _flags:d._flags
+  };
+  showGeneratedDoc('separation',title,meta,text,outData,d._filename,'separation-workspace',disclaimer);
+  if(d.protections.length){
+    showToast('Packet ready — attorney review flagged','error');
+  }else{
+    showToast('Separation packet generated','success');
+  }
+}
+
+function viewGeneratedSep(){
+  var last=GEN_DOCS.separation_last;
+  if(!last||!last._generatedText){showToast('Packet not available — try generating a new one','error');return;}
+  displayGeneratedSep(last);
 }
 
 /* ===============================================================
